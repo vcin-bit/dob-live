@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>DOB·LIVE — Officer Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0f2744;--navy2:#1e3a5f;--navy3:#2d5282;
+  --bg:#f0f4f8;
+  --border:#e2e8f0;--border2:#cbd5e1;
+  --text:#0f172a;--text2:#334155;--muted:#64748b;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-bd:#bbf7d0;
+  --red:#dc2626;--red-bg:#fef2f2;--red-bd:#fecaca;
+  --blue:#1d4ed8;--blue-bg:#eff6ff;--blue-bd:#bfdbfe;
+  --amber:#d97706;--amber-bg:#fffbeb;--amber-bd:#fde68a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--text);}
+button,input,textarea,select{font-family:inherit;}
+
+/* ══ BACKGROUND ══ */
+.bg-pattern{
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(45,82,130,.6) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(30,58,95,.8) 0%, transparent 50%),
+    var(--navy);
+  z-index:0;
+}
+.bg-grid{
+  position:fixed;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size:40px 40px;
+  z-index:1;
+}
+
+/* ══ WRAP ══ */
+.wrap{
+  position:relative;z-index:10;
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;
+}
+
+/* ══ BRAND ══ */
+.brand{text-align:center;margin-bottom:32px;}
+.brand-icon{
+  width:56px;height:56px;background:#fff;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:24px;color:var(--navy);
+  margin:0 auto 14px;
+  box-shadow:0 8px 24px rgba(0,0,0,.2);
+}
+.brand-name{font-size:26px;font-weight:700;color:#fff;letter-spacing:-.01em;}
+.brand-sub{font-size:13px;color:#93c5fd;margin-top:4px;}
+
+/* ══ SCREENS ══ */
+.screen{display:none;width:100%;max-width:420px;}
+.screen.active{display:block;}
+
+/* ══ CARD ══ */
+.card{
+  background:#fff;border-radius:12px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+  overflow:hidden;
+}
+.card-head{
+  background:var(--navy2);padding:18px 24px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.card-head-title{font-size:15px;font-weight:700;color:#fff;}
+.card-head-sub{font-size:12px;color:#93c5fd;margin-top:3px;}
+.card-body{padding:24px;}
+.card-footer{
+  padding:14px 24px;border-top:1px solid var(--border);
+  background:#fafafa;display:flex;justify-content:flex-end;gap:8px;
+}
+
+/* ══ FORM ══ */
+.field-label{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.field{
+  width:100%;border:1px solid var(--border2);border-radius:7px;
+  padding:11px 13px;font-size:14px;color:var(--text);
+  outline:none;transition:border .15s,box-shadow .15s;background:#fff;
+}
+.field:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(15,39,68,.08);}
+.field-group{margin-bottom:16px;}
+.field-group:last-of-type{margin-bottom:0;}
+
+/* ══ BUTTONS ══ */
+.btn{
+  width:100%;border:none;border-radius:7px;
+  padding:12px;font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.btn-primary{background:var(--navy);color:#fff;margin-top:20px;}
+.btn-primary:hover{background:var(--navy2);}
+.btn-primary:active{transform:scale(.98);}
+.btn-outline{background:#fff;color:var(--text2);border:1px solid var(--border2);margin-top:10px;}
+.btn-outline:hover{border-color:var(--navy);color:var(--navy);}
+.btn-amber{background:#d97706;color:#fff;margin-top:10px;}
+.btn-amber:hover{background:#b45309;}
+.btn-green{background:var(--green);color:#fff;margin-top:10px;}
+
+/* ══ GEO STATUS ══ */
+.geo-checking{
+  background:var(--navy2);border-radius:8px;padding:16px;
+  text-align:center;margin-bottom:20px;
+}
+.geo-spinner{
+  width:36px;height:36px;border:3px solid rgba(255,255,255,.15);
+  border-top-color:#93c5fd;border-radius:50%;
+  animation:spin .8s linear infinite;margin:0 auto 10px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.geo-label{font-size:13px;font-weight:500;color:#93c5fd;}
+
+.geo-result{border-radius:8px;padding:14px;margin-bottom:20px;display:flex;align-items:flex-start;gap:10px;border:1px solid;}
+.geo-result.pass{background:var(--green-bg);border-color:var(--green-bd);}
+.geo-result.fail{background:var(--red-bg);border-color:var(--red-bd);}
+.geo-result.warn{background:var(--amber-bg);border-color:var(--amber-bd);}
+.geo-icon{font-size:22px;flex-shrink:0;}
+.geo-text-title{font-size:13px;font-weight:700;}
+.geo-text-sub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4;}
+
+/* ══ DEMO ACCOUNTS ══ */
+.demo-section{margin-top:24px;}
+.demo-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px;text-align:center;}
+.demo-accounts{display:flex;flex-direction:column;gap:6px;}
+.demo-row{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  border-radius:7px;padding:9px 12px;cursor:pointer;transition:all .15s;
+}
+.demo-row:hover{background:rgba(255,255,255,.1);}
+.demo-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
+.demo-name{font-size:12px;font-weight:600;color:#e2e8f0;flex:1;}
+.demo-meta{font-size:10px;color:#64748b;}
+.demo-pos{font-size:10px;font-weight:600;color:#93c5fd;}
+
+/* ══ STATUS BADGE ══ */
+.status-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:4px;border:1px solid;}
+.badge-green{background:var(--green-bg);color:var(--green);border-color:var(--green-bd);}
+.badge-red{background:var(--red-bg);color:var(--red);border-color:var(--red-bd);}
+.badge-amber{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd);}
+.badge-blue{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd);}
+
+/* ══ DIVIDER ══ */
+.divider{display:flex;align-items:center;gap:10px;margin:18px 0;}
+.divider-line{flex:1;height:1px;background:var(--border);}
+.divider-text{font-size:11px;color:var(--muted);}
+
+/* ══ SUCCESS ══ */
+.success-icon{font-size:48px;text-align:center;margin-bottom:16px;}
+.success-title{font-size:18px;font-weight:700;color:var(--navy);text-align:center;margin-bottom:6px;}
+.success-sub{font-size:13px;color:var(--muted);text-align:center;line-height:1.5;margin-bottom:20px;}
+.officer-info-card{background:var(--navy);border-radius:8px;padding:14px 16px;margin-bottom:16px;}
+.officer-info-name{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px;}
+.officer-info-row{display:flex;align-items:center;gap:8px;font-size:12px;color:#93c5fd;margin-top:4px;}
+
+/* ══ REMOTE REQUEST ══ */
+.remote-info{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--text2);line-height:1.6;}
+.remote-info strong{color:var(--navy);}
+
+/* ══ REQUEST SENT ══ */
+.request-sent{text-align:center;padding:8px;}
+.request-sent-icon{font-size:44px;margin-bottom:14px;}
+.request-sent-title{font-size:17px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.request-sent-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px;}
+.request-timer{
+  font-family:'DM Mono',monospace;font-size:13px;font-weight:600;
+  color:var(--navy2);background:var(--blue-bg);
+  border:1px solid var(--blue-bd);border-radius:6px;
+  padding:8px 14px;display:inline-block;margin-bottom:20px;
+}
+
+/* ══ ERROR ══ */
+.error-msg{background:var(--red-bg);border:1px solid var(--red-bd);border-radius:6px;padding:10px 12px;font-size:13px;color:var(--red);margin-bottom:16px;display:none;}
+.error-msg.show{display:block;}
+</style>
+</head>
+<body>
+
+<div class="bg-pattern"></div>
+<div class="bg-grid"></div>
+
+<div class="wrap">
+  <div class="brand">
+    <div class="brand-icon">D</div>
+    <div class="brand-name">DOB·LIVE</div>
+    <div class="brand-sub">Officer Sign In</div>
+  </div>
+
+  <!-- ══ SCREEN 1: LOGIN ══ -->
+  <div class="screen active" id="screen-login">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-head-title">🪪 Officer Sign In</div>
+        <div class="card-head-sub">Enter your credentials to access your site DOB</div>
+      </div>
+      <div class="card-body">
+        <div class="error-msg" id="login-error">Incorrect email or password. Please try again.</div>
+        <div class="field-group">
+          <label class="field-label">Email Address</label>
+          <input class="field" type="email" id="login-email" placeholder="your@email.com" autocomplete="email"/>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Password</label>
+          <input class="field" type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"/>
+        </div>
+        <button class="btn btn-primary" onclick="attemptLogin()">Sign In →</button>
+      </div>
+    </div>
+
+    <!-- Demo accounts -->
+    <div class="demo-section">
+      <div class="demo-label">Demo accounts — click to auto-fill</div>
+      <div class="demo-accounts" id="demo-accounts"></div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 2: GEO CHECK ══ -->
+  <div class="screen" id="screen-geo">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-head-title">📍 Location Verification</div>
+        <div class="card-head-sub" id="geo-site-name">Checking your location...</div>
+      </div>
+      <div class="card-body">
+        <div class="geo-checking" id="geo-checking">
+          <div class="geo-spinner"></div>
+          <div class="geo-label">Acquiring GPS signal...</div>
+        </div>
+        <div class="geo-result" id="geo-result" style="display:none;"></div>
+        <div id="geo-actions"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 3: REMOTE REQUEST ══ -->
+  <div class="screen" id="screen-remote">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-head-title">🔐 Request Remote Access</div>
+        <div class="card-head-sub">Your ops manager will be notified by email</div>
+      </div>
+      <div class="card-body">
+        <div class="remote-info">
+          You are <strong id="remote-distance"></strong> from your assigned site. Sign-in requires you to be within <strong id="remote-radius"></strong> of <strong id="remote-site"></strong>.<br/><br/>
+          If you have a valid reason to sign in remotely, submit a request below. Your ops manager will be notified immediately.
+        </div>
+        <div class="field-group">
+          <label class="field-label">Reason for Remote Access</label>
+          <select class="field" id="remote-reason">
+            <option value="">— Select a reason —</option>
+            <option>Covering a colleague at another site</option>
+            <option>Called in early — travelling to site</option>
+            <option>Working from operations base</option>
+            <option>Emergency — unable to attend site</option>
+            <option>Other (explain below)</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Additional Notes (optional)</label>
+          <textarea class="field" id="remote-notes" rows="2" placeholder="Any extra context for your manager..."></textarea>
+        </div>
+        <button class="btn btn-amber" onclick="sendRemoteRequest()">📧 Send Request to Ops Manager</button>
+        <button class="btn btn-outline" onclick="showScreen('screen-login')">← Back to Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 4: REQUEST SENT ══ -->
+  <div class="screen" id="screen-request-sent">
+    <div class="card">
+      <div class="card-body">
+        <div class="request-sent">
+          <div class="request-sent-icon">📧</div>
+          <div class="request-sent-title">Request Sent</div>
+          <div class="request-sent-sub">Your ops manager has been notified by email and will approve or deny your request shortly.<br/><br/>You will receive an email confirmation once a decision is made.</div>
+          <div class="request-timer" id="request-timer">Waiting for approval...</div>
+          <div id="approval-result"></div>
+        </div>
+        <button class="btn btn-outline" onclick="showScreen('screen-login')">← Back to Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 5: APPROVED / SIGNED IN ══ -->
+  <div class="screen" id="screen-success">
+    <div class="card">
+      <div class="card-body">
+        <div class="success-icon">✅</div>
+        <div class="success-title">Signed In</div>
+        <div class="success-sub" id="success-sub">Location verified. Welcome to your shift.</div>
+        <div class="officer-info-card" id="officer-info-card"></div>
+        <div style="background:var(--green-bg);border:1px solid var(--green-bd);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--green);line-height:1.6;margin-bottom:16px;" id="geo-confirm"></div>
+        <button class="btn btn-primary" style="margin-top:0;" onclick="launchDOB()">Open DOB → </button>
+        <button class="btn btn-outline" onclick="showScreen('screen-login')">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════
+// DEMO DATA
+// ══════════════════════════════════
+const OFFICERS = [
+  {id:'o1', first:'James', last:'Harris', email:'j.harris@risksecured.co.uk', password:'harris123', sia:'7741000000000001', position:'Security Officer', siteId:'s1', siteName:'Brindleyplace', siteCity:'Birmingham', siteLat:52.4751, siteLng:-1.9054, geofenceRadius:200, opsEmail:'fletcher@risksecured.co.uk', color:'#0f2744'},
+  {id:'o3', first:'Terry', last:'Dawson', email:'t.dawson@risksecured.co.uk', password:'dawson123', sia:'3382000000000003', position:'Supervisor', siteId:'s2', siteName:'Merry Hill Centre', siteCity:'Dudley', siteLat:52.4789, siteLng:-2.0934, geofenceRadius:200, opsEmail:'fletcher@risksecured.co.uk', color:'#1e3a5f'},
+  {id:'o5', first:'Raj', last:'Singh', email:'r.singh@risksecured.co.uk', password:'singh123', sia:'9104000000000005', position:'Senior Officer', siteId:'s3', siteName:'Wolverhampton Civic', siteCity:'Wolverhampton', siteLat:52.5842, siteLng:-2.1288, geofenceRadius:200, opsEmail:'fletcher@risksecured.co.uk', color:'#2d5282'},
+  {id:'o6', first:'Marcus', last:'Clarke', email:'m.clarke@risksecured.co.uk', password:'clarke123', sia:'6657000000000006', position:'Site Manager', siteId:'s4', siteName:'Walsall Town Centre', siteCity:'Walsall', siteLat:52.5857, siteLng:-1.9824, geofenceRadius:200, opsEmail:'fletcher@risksecured.co.uk', color:'#4a5568'},
+];
+
+const POS_COLOR = {
+  'Security Officer':'#64748b',
+  'Senior Officer':'#0369a1',
+  'Supervisor':'#7c3aed',
+  'Assistant Manager':'#b45309',
+  'Site Manager':'#16a34a',
+};
+
+let currentOfficer = null;
+let geoWatchId = null;
+let approvalPolling = null;
+
+// ══════════════════════════════════
+// INIT
+// ══════════════════════════════════
+function init(){
+  buildDemoAccounts();
+}
+
+function buildDemoAccounts(){
+  document.getElementById('demo-accounts').innerHTML = OFFICERS.map(o=>`
+    <div class="demo-row" onclick="fillDemo('${o.email}','${o.password}')">
+      <div class="demo-av" style="background:${o.color};">${o.first[0]}${o.last[0]}</div>
+      <div style="flex:1;">
+        <div class="demo-name">${o.last}, ${o.first}</div>
+        <div class="demo-meta">📍 ${o.siteName} · SIA-${o.sia.slice(-4)}</div>
+      </div>
+      <span class="demo-pos" style="color:${POS_COLOR[o.position]||'#64748b'};">${o.position}</span>
+    </div>`).join('');
+}
+
+function fillDemo(email, password){
+  document.getElementById('login-email').value = email;
+  document.getElementById('login-password').value = password;
+  document.getElementById('login-error').classList.remove('show');
+}
+
+// ══════════════════════════════════
+// SCREENS
+// ══════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ══════════════════════════════════
+// LOGIN
+// ══════════════════════════════════
+function attemptLogin(){
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('login-password').value;
+  const officer = OFFICERS.find(o=>o.email===email && o.password===pass);
+  if(!officer){
+    document.getElementById('login-error').classList.add('show');
+    return;
+  }
+  document.getElementById('login-error').classList.remove('show');
+  currentOfficer = officer;
+  startGeoCheck();
+}
+
+// ══════════════════════════════════
+// GEOFENCE CHECK
+// ══════════════════════════════════
+function startGeoCheck(){
+  showScreen('screen-geo');
+  document.getElementById('geo-site-name').textContent = currentOfficer.siteName + ' · ' + currentOfficer.siteCity;
+  document.getElementById('geo-checking').style.display = 'block';
+  document.getElementById('geo-result').style.display = 'none';
+  document.getElementById('geo-actions').innerHTML = '';
+
+  if(!navigator.geolocation){
+    showGeoFail('Your browser does not support location services. Please use a modern mobile browser.', null);
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    pos => onGeoSuccess(pos),
+    err => onGeoError(err),
+    {enableHighAccuracy:true, timeout:12000, maximumAge:0}
+  );
+}
+
+function haversineDistance(lat1, lng1, lat2, lng2){
+  const R = 6371000;
+  const dLat = (lat2-lat1)*Math.PI/180;
+  const dLng = (lng2-lng1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function onGeoSuccess(pos){
+  document.getElementById('geo-checking').style.display = 'none';
+  const dist = haversineDistance(pos.coords.latitude, pos.coords.longitude, currentOfficer.siteLat, currentOfficer.siteLng);
+  const distM = Math.round(dist);
+  const within = dist <= currentOfficer.geofenceRadius;
+  const accuracy = Math.round(pos.coords.accuracy);
+
+  const result = document.getElementById('geo-result');
+  result.style.display = 'flex';
+
+  if(within){
+    result.className = 'geo-result pass';
+    result.innerHTML = `
+      <span class="geo-icon">✅</span>
+      <div>
+        <div class="geo-text-title" style="color:var(--green);">Location Verified</div>
+        <div class="geo-text-sub">You are ${distM}m from ${currentOfficer.siteName} — within the ${currentOfficer.geofenceRadius}m allowed zone. GPS accuracy ±${accuracy}m.</div>
+      </div>`;
+    document.getElementById('geo-actions').innerHTML = `<button class="btn btn-green" onclick="completeLogin(${distM}, ${accuracy})">✓ Sign In to ${currentOfficer.siteName}</button>`;
+  } else {
+    result.className = 'geo-result fail';
+    result.innerHTML = `
+      <span class="geo-icon">🚫</span>
+      <div>
+        <div class="geo-text-title" style="color:var(--red);">Outside Site Boundary</div>
+        <div class="geo-text-sub">You are ${distM}m from ${currentOfficer.siteName}. Sign-in requires you to be within ${currentOfficer.geofenceRadius}m of the site.</div>
+      </div>`;
+    document.getElementById('geo-actions').innerHTML = `
+      <button class="btn btn-amber" onclick="showRemoteRequest(${distM})">🔐 Request Remote Access</button>
+      <button class="btn btn-outline" onclick="startGeoCheck()">↻ Try Again</button>`;
+  }
+}
+
+function onGeoError(err){
+  document.getElementById('geo-checking').style.display = 'none';
+  let msg = 'Unable to determine your location.';
+  if(err.code===1) msg = 'Location permission was denied. Please enable location access in your browser settings and try again.';
+  else if(err.code===3) msg = 'Location request timed out. Please check your GPS signal and try again.';
+  showGeoFail(msg, err.code);
+}
+
+function showGeoFail(msg, code){
+  const result = document.getElementById('geo-result');
+  result.style.display = 'flex';
+  result.className = 'geo-result warn';
+  result.innerHTML = `
+    <span class="geo-icon">⚠️</span>
+    <div>
+      <div class="geo-text-title" style="color:var(--amber);">Location Unavailable</div>
+      <div class="geo-text-sub">${msg}</div>
+    </div>`;
+  document.getElementById('geo-actions').innerHTML = `
+    <button class="btn btn-amber" onclick="showRemoteRequest(null)">🔐 Request Remote Access</button>
+    <button class="btn btn-outline" onclick="startGeoCheck()">↻ Try Again</button>`;
+}
+
+// ══════════════════════════════════
+// REMOTE REQUEST
+// ══════════════════════════════════
+function showRemoteRequest(distanceM){
+  document.getElementById('remote-distance').textContent = distanceM ? distanceM+'m away' : 'an unknown distance';
+  document.getElementById('remote-radius').textContent = currentOfficer.geofenceRadius+'m';
+  document.getElementById('remote-site').textContent = currentOfficer.siteName;
+  showScreen('screen-remote');
+}
+
+function sendRemoteRequest(){
+  const reason = document.getElementById('remote-reason').value;
+  if(!reason){ alert('Please select a reason for the remote access request.'); return; }
+  const notes = document.getElementById('remote-notes').value.trim();
+
+  // In production: POST to /api/remote-login-request → triggers email to ops manager
+  // Here we store in the shared window object (same as ops-manager uses)
+  const req = {
+    id: 'rr-'+Date.now(),
+    officer: currentOfficer.last+', '+currentOfficer.first,
+    officerId: currentOfficer.id,
+    site: currentOfficer.siteName,
+    time: new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}),
+    reason: reason + (notes?' — '+notes:''),
+    status: 'pending',
+    requestedAt: new Date(),
+  };
+  window._REMOTE_REQUESTS = window._REMOTE_REQUESTS || [];
+  window._REMOTE_REQUESTS.push(req);
+
+  showScreen('screen-request-sent');
+  startApprovalPolling(req.id);
+}
+
+let pollCount = 0;
+function startApprovalPolling(reqId){
+  pollCount = 0;
+  const timer = document.getElementById('request-timer');
+  const resultEl = document.getElementById('approval-result');
+
+  // Update waiting timer
+  const timerInterval = setInterval(()=>{
+    pollCount++;
+    const mins = Math.floor(pollCount/6);
+    const secs = (pollCount%6)*10;
+    timer.textContent = `Waiting ${mins>0?mins+'m ':''} ${String(secs).padStart(2,'0')}s`;
+  }, 10000);
+
+  // Poll for approval (in real app this would be a websocket or SSE)
+  approvalPolling = setInterval(()=>{
+    const req = (window._REMOTE_REQUESTS||[]).find(r=>r.id===reqId);
+    if(!req) return;
+    if(req.status==='approved'){
+      clearInterval(approvalPolling);
+      clearInterval(timerInterval);
+      timer.style.display = 'none';
+      resultEl.innerHTML = `<div style="background:var(--green-bg);border:1px solid var(--green-bd);border-radius:8px;padding:12px 14px;margin-bottom:16px;text-align:center;">
+        <div style="font-size:22px;margin-bottom:6px;">✅</div>
+        <div style="font-size:14px;font-weight:700;color:var(--green);">Access Approved</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;">Your ops manager has approved your remote sign-in.</div>
+      </div>
+      <button class="btn btn-green" style="margin-top:0;" onclick="completeLogin(null, null, true)">Continue to DOB →</button>`;
+    } else if(req.status==='denied'){
+      clearInterval(approvalPolling);
+      clearInterval(timerInterval);
+      timer.style.display = 'none';
+      resultEl.innerHTML = `<div style="background:var(--red-bg);border:1px solid var(--red-bd);border-radius:8px;padding:12px 14px;margin-bottom:16px;text-align:center;">
+        <div style="font-size:22px;margin-bottom:6px;">❌</div>
+        <div style="font-size:14px;font-weight:700;color:var(--red);">Access Denied</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;">Your ops manager has denied this remote sign-in. Please contact them directly.</div>
+      </div>`;
+    }
+  }, 2000);
+}
+
+// ══════════════════════════════════
+// COMPLETE LOGIN
+// ══════════════════════════════════
+function completeLogin(distM, accuracy, isRemote){
+  const o = currentOfficer;
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  const posColor = POS_COLOR[o.position]||'#64748b';
+
+  document.getElementById('officer-info-card').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="width:40px;height:40px;border-radius:50%;background:${o.color};display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;">${o.first[0]}${o.last[0]}</div>
+      <div>
+        <div class="officer-info-name">${o.last}, ${o.first}</div>
+        <div class="officer-info-row">
+          <span style="background:rgba(255,255,255,.15);color:#e2e8f0;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;">${o.position}</span>
+          <span>·</span>
+          <span>SIA-${o.sia.slice(-4)}</span>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.1);padding-top:10px;display:flex;gap:14px;flex-wrap:wrap;">
+      <div><div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#475569;">Site</div><div style="font-size:12px;font-weight:600;color:#93c5fd;margin-top:2px;">${o.siteName}</div></div>
+      <div><div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#475569;">Sign-In Time</div><div style="font-size:12px;font-weight:600;color:#93c5fd;margin-top:2px;">${timeStr}</div></div>
+      ${isRemote?'<div><div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#475569;">Access</div><div style="font-size:12px;font-weight:600;color:#fbbf24;margin-top:2px;">Remote (Approved)</div></div>':''}
+    </div>`;
+
+  document.getElementById('geo-confirm').innerHTML = isRemote
+    ? '🔐 Remote access — approved by your operations manager. This session will be flagged in the audit log.'
+    : `📍 Location verified — ${distM}m from ${o.siteName} (within ${o.geofenceRadius}m zone). GPS accuracy ±${accuracy}m.`;
+
+  document.getElementById('success-sub').textContent = isRemote
+    ? 'Remote access approved. Welcome, ' + o.first + '.'
+    : 'Location verified. Welcome to your shift, ' + o.first + '.';
+
+  showScreen('screen-success');
+}
+
+function launchDOB(){
+  alert('In production this would open the officer DOB page for ' + currentOfficer.siteName + '.\n\nFor this demo, open officer-dob-page.html.');
+}
+
+// ══════════════════════════════════
+// INIT
+// ══════════════════════════════════
+init();
+</script>
+</body>
+</html>

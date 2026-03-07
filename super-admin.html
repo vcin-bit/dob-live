@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>DOB·LIVE — Platform Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0a1628;--navy2:#0f2744;--navy3:#1e3a5f;
+  --bg:#f0f4f8;--card:#ffffff;
+  --border:#e2e8f0;--border2:#cbd5e1;
+  --text:#0f172a;--text2:#334155;--muted:#64748b;
+  --cyan:#00d4ff;--blue:#1d6aff;--blue-bg:#eff6ff;--blue-bd:#bfdbfe;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-bd:#bbf7d0;
+  --red:#dc2626;--red-bg:#fef2f2;--red-bd:#fecaca;
+  --amber:#d97706;--amber-bg:#fffbeb;--amber-bd:#fde68a;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-bd:#ddd6fe;
+  --sidebar:220px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;}
+button,input,select,textarea{font-family:inherit;}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  background:var(--navy2);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;z-index:50;
+}
+.sb-brand{
+  padding:18px 16px 14px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;gap:9px;
+}
+.sb-logo{width:30px;height:30px;background:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--navy2);flex-shrink:0;}
+.sb-name{font-size:14px;font-weight:700;color:#fff;}
+.sb-name span{color:var(--cyan);}
+.sb-badge{font-size:9px;font-weight:700;letter-spacing:.08em;background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.2);border-radius:3px;padding:1px 5px;margin-top:2px;display:inline-block;}
+.sb-nav{padding:12px 8px;flex:1;overflow-y:auto;}
+.sb-section{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:10px 8px 5px;}
+.nav-item{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 10px;border-radius:6px;cursor:pointer;
+  font-size:13px;font-weight:500;color:rgba(255,255,255,.55);
+  transition:all .15s;margin-bottom:1px;
+}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,.1);color:#fff;}
+.nav-icon{width:18px;text-align:center;flex-shrink:0;font-size:14px;}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;}
+.sb-user{
+  padding:12px 16px;border-top:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;gap:9px;
+}
+.sb-av{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.sb-uname{font-size:12px;font-weight:600;color:rgba(255,255,255,.7);}
+.sb-urole{font-size:10px;color:rgba(255,255,255,.3);}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:0 24px;height:52px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:40;
+}
+.topbar-title{font-size:15px;font-weight:700;color:var(--navy2);}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.btn{border:none;border-radius:6px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px;}
+.btn-navy{background:var(--navy2);color:#fff;}
+.btn-navy:hover{background:var(--navy3);}
+.btn-outline{background:#fff;color:var(--text2);border:1px solid var(--border2);}
+.btn-outline:hover{border-color:var(--navy2);color:var(--navy2);}
+.btn-red{background:var(--red);color:#fff;}
+.btn-red:hover{background:#b91c1c;}
+.btn-green{background:var(--green);color:#fff;}
+.btn-sm{padding:5px 10px;font-size:11px;}
+
+/* CONTENT */
+.content{padding:20px 24px;flex:1;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:14px;}
+.card-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:13px;font-weight:700;color:var(--navy2);}
+.card-body{padding:18px;}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;}
+.kpi-num{font-size:26px;font-weight:700;color:var(--navy2);line-height:1;margin-bottom:3px;}
+.kpi-label{font-size:11px;color:var(--muted);}
+.kpi-sub{font-size:10px;margin-top:3px;font-weight:600;}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);}
+td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text2);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#f8fafc;}
+.tbl-name{font-weight:600;color:var(--navy2);font-size:13px;}
+.tbl-mono{font-family:'DM Mono',monospace;font-size:11px;}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;border:1px solid;white-space:nowrap;}
+.badge-green{background:var(--green-bg);color:var(--green);border-color:var(--green-bd);}
+.badge-red{background:var(--red-bg);color:var(--red);border-color:var(--red-bd);}
+.badge-amber{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd);}
+.badge-blue{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd);}
+.badge-purple{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-bd);}
+.badge-navy{background:rgba(15,39,68,.08);color:var(--navy2);border-color:rgba(15,39,68,.15);}
+
+/* TIER BADGE */
+.tier-starter{background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;}
+.tier-pro{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd);}
+.tier-enterprise{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd);}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:10px;width:100%;max-width:540px;box-shadow:0 20px 60px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto;}
+.modal-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-size:14px;font-weight:700;color:var(--navy2);}
+.modal-close{background:none;border:none;font-size:18px;color:var(--muted);cursor:pointer;line-height:1;}
+.modal-body{padding:20px;}
+.modal-foot{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;background:#fafafa;border-radius:0 0 10px 10px;}
+
+/* FORM */
+.field-label{display:block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.field{width:100%;border:1px solid var(--border2);border-radius:6px;padding:9px 11px;font-size:13px;color:var(--text);outline:none;transition:border .15s;}
+.field:focus{border-color:var(--navy2);box-shadow:0 0 0 2px rgba(15,39,68,.07);}
+.field-group{margin-bottom:14px;}
+.form-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+
+/* COMPANY CARD */
+.co-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:10px;display:flex;align-items:flex-start;gap:14px;transition:box-shadow .15s;}
+.co-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.08);}
+.co-av{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff;flex-shrink:0;}
+.co-name{font-size:14px;font-weight:700;color:var(--navy2);margin-bottom:3px;}
+.co-meta{font-size:11px;color:var(--muted);}
+.co-actions{margin-left:auto;display:flex;gap:6px;align-items:center;}
+
+/* ALERT BANNER */
+.alert{border-radius:7px;padding:10px 14px;margin-bottom:14px;font-size:12px;display:flex;align-items:flex-start;gap:8px;}
+.alert-icon{flex-shrink:0;font-size:14px;}
+.alert-blue{background:var(--blue-bg);border:1px solid var(--blue-bd);color:#1e40af;}
+.alert-amber{background:var(--amber-bg);border:1px solid var(--amber-bd);color:#92400e;}
+
+/* ACTIVITY */
+.activity-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.activity-item:last-child{border-bottom:none;}
+.activity-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.activity-text{font-size:12px;color:var(--text2);flex:1;}
+.activity-time{font-size:10px;color:var(--muted);white-space:nowrap;}
+
+/* STAT BAR */
+.stat-bar-row{margin-bottom:10px;}
+.stat-bar-head{display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;}
+.stat-bar-bg{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.stat-bar-fill{height:100%;border-radius:3px;transition:width .6s ease;}
+
+/* EMAIL PREVIEW */
+.email-preview{background:#f8fafc;border:1px solid var(--border);border-radius:7px;padding:14px;font-size:12px;color:var(--text2);line-height:1.7;}
+.email-preview strong{color:var(--navy2);}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">D</div>
+    <div>
+      <div class="sb-name">DOB<span>·LIVE</span></div>
+      <div class="sb-badge">SUPER ADMIN</div>
+    </div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-section">Platform</div>
+    <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">◈</span> Dashboard</div>
+    <div class="nav-item" onclick="showPage('companies',this)"><span class="nav-icon">🏢</span> Companies <span class="nav-badge" id="nb-companies">3</span></div>
+    <div class="nav-item" onclick="showPage('onboard',this)"><span class="nav-icon">+</span> Onboard Company</div>
+    <div class="sb-section">Management</div>
+    <div class="nav-item" onclick="showPage('billing',this)"><span class="nav-icon">£</span> Billing & Tiers</div>
+    <div class="nav-item" onclick="showPage('activity',this)"><span class="nav-icon">◎</span> Activity Log</div>
+    <div class="sb-section">System</div>
+    <div class="nav-item" onclick="showPage('settings',this)"><span class="nav-icon">⚙</span> Platform Settings</div>
+  </div>
+  <div class="sb-user">
+    <div class="sb-av">DF</div>
+    <div>
+      <div class="sb-uname">David Foster</div>
+      <div class="sb-urole">PSIN Group · Super Admin</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title">Platform Dashboard</div>
+    <div class="topbar-right">
+      <button class="btn btn-outline btn-sm" onclick="showPage('activity',document.querySelector('.nav-item:nth-child(6)'))">Activity Log</button>
+      <button class="btn btn-navy btn-sm" onclick="showPage('onboard',document.querySelectorAll('.nav-item')[2])">+ Onboard Company</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="page active" id="page-dashboard">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-num" style="color:var(--navy2);">3</div><div class="kpi-label">Active Companies</div><div class="kpi-sub" style="color:var(--green);">+1 this month</div></div>
+        <div class="kpi"><div class="kpi-num" style="color:var(--blue);">12</div><div class="kpi-label">Total Sites</div><div class="kpi-sub" style="color:var(--muted);">across all companies</div></div>
+        <div class="kpi"><div class="kpi-num" style="color:var(--green);">£298</div><div class="kpi-label">Monthly Revenue</div><div class="kpi-sub" style="color:var(--green);">MRR</div></div>
+        <div class="kpi"><div class="kpi-num" style="color:var(--amber);">1</div><div class="kpi-label">Pending Onboards</div><div class="kpi-sub" style="color:var(--muted);">awaiting activation</div></div>
+        <div class="kpi"><div class="kpi-num" style="color:var(--purple);">34</div><div class="kpi-label">Licensed Officers</div><div class="kpi-sub" style="color:var(--muted);">across platform</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 340px;gap:14px;">
+        <div>
+          <div class="card">
+            <div class="card-head"><span class="card-title">Companies Overview</span><button class="btn btn-outline btn-sm" onclick="showPage('companies',document.querySelectorAll('.nav-item')[1])">View All</button></div>
+            <div class="card-body" style="padding:0;">
+              <div class="tbl-wrap">
+                <table>
+                  <thead><tr><th>Company</th><th>Tier</th><th>Sites</th><th>Officers</th><th>MRR</th><th>Status</th><th>Joined</th></tr></thead>
+                  <tbody id="dash-companies-table"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><span class="card-title">Revenue by Tier</span></div>
+            <div class="card-body">
+              <div id="tier-bars"></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="card-head"><span class="card-title">Recent Activity</span></div>
+            <div class="card-body" style="padding:10px 16px;" id="dash-activity"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-title">Early Access Requests</span></div>
+            <div class="card-body" id="dash-requests"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ COMPANIES ══ -->
+    <div class="page" id="page-companies">
+      <div class="alert alert-blue"><span class="alert-icon">ℹ</span><span>Click any company to view their sites, officers and usage details.</span></div>
+      <div id="companies-list"></div>
+    </div>
+
+    <!-- ══ ONBOARD ══ -->
+    <div class="page" id="page-onboard">
+      <div style="max-width:620px;">
+        <div class="alert alert-blue"><span class="alert-icon">✉</span><span>On submission, an activation email with login credentials will be automatically sent to the ops manager. They will be prompted to set their own password on first login.</span></div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">New Company Details</span></div>
+          <div class="card-body">
+            <div class="form-2">
+              <div class="field-group"><label class="field-label">Company Name</label><input class="field" id="co-name" placeholder="e.g. Shield Security Ltd"/></div>
+              <div class="field-group"><label class="field-label">Company Registration No.</label><input class="field" id="co-reg" placeholder="e.g. 12345678"/></div>
+            </div>
+            <div class="form-2">
+              <div class="field-group"><label class="field-label">Primary Contact Name</label><input class="field" id="co-contact" placeholder="Full name"/></div>
+              <div class="field-group"><label class="field-label">Contact Mobile</label><input class="field" id="co-mobile" placeholder="07xxx xxxxxx" type="tel"/></div>
+            </div>
+            <div class="field-group"><label class="field-label">Ops Manager Email (login will be sent here)</label><input class="field" id="co-email" placeholder="opsmanager@company.com" type="email"/></div>
+
+            <div style="border-top:1px solid var(--border);margin:16px 0 14px;padding-top:14px;">
+              <div style="font-size:11px;font-weight:700;color:var(--navy2);margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em;">Subscription Tier</div>
+              <div class="form-3">
+                <div class="tier-option selected-tier" id="tier-starter" onclick="selectTier('starter',this)" style="border:2px solid var(--navy2);border-radius:7px;padding:12px;cursor:pointer;background:#f8fafc;">
+                  <div style="font-size:11px;font-weight:700;color:var(--navy2);">STARTER</div>
+                  <div style="font-size:20px;font-weight:700;color:var(--navy2);">£50<span style="font-size:11px;font-weight:400;color:var(--muted);">/mo</span></div>
+                  <div style="font-size:10px;color:var(--muted);margin-top:3px;">1 site · 5 officers</div>
+                </div>
+                <div class="tier-option" id="tier-pro" onclick="selectTier('pro',this)" style="border:2px solid var(--border);border-radius:7px;padding:12px;cursor:pointer;">
+                  <div style="font-size:11px;font-weight:700;color:var(--blue);">PROFESSIONAL</div>
+                  <div style="font-size:20px;font-weight:700;color:var(--navy2);">£99<span style="font-size:11px;font-weight:400;color:var(--muted);">/mo</span></div>
+                  <div style="font-size:10px;color:var(--muted);margin-top:3px;">5 sites · 20 officers</div>
+                </div>
+                <div class="tier-option" id="tier-enterprise" onclick="selectTier('enterprise',this)" style="border:2px solid var(--border);border-radius:7px;padding:12px;cursor:pointer;">
+                  <div style="font-size:11px;font-weight:700;color:var(--purple);">ENTERPRISE</div>
+                  <div style="font-size:20px;font-weight:700;color:var(--navy2);">£249<span style="font-size:11px;font-weight:400;color:var(--muted);">/mo</span></div>
+                  <div style="font-size:10px;color:var(--muted);margin-top:3px;">Unlimited</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="border-top:1px solid var(--border);margin:14px 0 14px;padding-top:14px;">
+              <div style="font-size:11px;font-weight:700;color:var(--navy2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;">Beta / Trial Settings</div>
+              <div class="form-2">
+                <div class="field-group"><label class="field-label">Free Trial Days</label><input class="field" id="co-trial" type="number" value="60" min="0" max="365"/></div>
+                <div class="field-group"><label class="field-label">Billing Start Date</label><input class="field" id="co-billing-start" type="date"/></div>
+              </div>
+            </div>
+
+            <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:2px;">
+              <div style="font-size:11px;font-weight:700;color:var(--navy2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;">Activation Email Preview</div>
+              <div class="email-preview" id="email-preview">
+                <strong>To:</strong> [ops manager email]<br/>
+                <strong>Subject:</strong> Welcome to DOB·LIVE — Your account is ready<br/><br/>
+                Hi [Contact Name],<br/><br/>
+                Your DOB·LIVE account for <strong>[Company Name]</strong> has been activated on the <strong>[Tier]</strong> plan.<br/><br/>
+                Sign in at: <strong>app.doblive.co.uk/login.html</strong><br/>
+                Your email: <strong>[ops manager email]</strong><br/>
+                Temporary password: <strong>[auto-generated]</strong><br/><br/>
+                You will be asked to set your own password on first login.<br/><br/>
+                If you have any questions contact us at onboarding@doblive.co.uk<br/><br/>
+                — The DOB·LIVE Team
+              </div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:18px;">
+              <button class="btn btn-navy" style="flex:1;" onclick="onboardCompany()">Activate & Send Email →</button>
+              <button class="btn btn-outline" onclick="clearOnboardForm()">Clear</button>
+            </div>
+            <div id="onboard-success" style="display:none;margin-top:12px;background:var(--green-bg);border:1px solid var(--green-bd);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--green);font-weight:600;">
+              ✓ Company activated. Activation email sent to ops manager.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ BILLING ══ -->
+    <div class="page" id="page-billing">
+      <div class="kpi-row" style="grid-template-columns:repeat(3,1fr);">
+        <div class="kpi"><div class="kpi-num" style="color:var(--green);">£298</div><div class="kpi-label">Monthly Recurring Revenue</div></div>
+        <div class="kpi"><div class="kpi-num">3</div><div class="kpi-label">Paying Accounts</div></div>
+        <div class="kpi"><div class="kpi-num" style="color:var(--amber);">0</div><div class="kpi-label">Overdue / Suspended</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">Billing & Tier Management</span></div>
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>Company</th><th>Current Tier</th><th>MRR</th><th>Trial Ends</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="billing-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ACTIVITY ══ -->
+    <div class="page" id="page-activity">
+      <div class="card">
+        <div class="card-head"><span class="card-title">Platform Activity Log</span></div>
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>Time</th><th>Event</th><th>Company</th><th>Detail</th></tr></thead>
+            <tbody id="activity-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SETTINGS ══ -->
+    <div class="page" id="page-settings">
+      <div style="max-width:500px;">
+        <div class="card">
+          <div class="card-head"><span class="card-title">Platform Settings</span></div>
+          <div class="card-body">
+            <div class="field-group"><label class="field-label">Platform Name</label><input class="field" value="DOB·LIVE"/></div>
+            <div class="field-group"><label class="field-label">Onboarding Email Address</label><input class="field" value="onboarding@doblive.co.uk"/></div>
+            <div class="field-group"><label class="field-label">App URL</label><input class="field" value="https://app.doblive.co.uk/login.html"/></div>
+            <div class="field-group"><label class="field-label">Default Trial Period (days)</label><input class="field" type="number" value="60"/></div>
+            <div class="field-group"><label class="field-label">Default Geofence Radius (metres)</label><input class="field" type="number" value="200"/></div>
+            <button class="btn btn-navy" style="margin-top:4px;">Save Settings</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">Super Admin Account</span></div>
+          <div class="card-body">
+            <div class="field-group"><label class="field-label">Name</label><input class="field" value="David Foster"/></div>
+            <div class="field-group"><label class="field-label">Email</label><input class="field" value="admin@psingroup.co.uk" type="email"/></div>
+            <div class="field-group"><label class="field-label">New Password</label><input class="field" type="password" placeholder="Leave blank to keep current"/></div>
+            <button class="btn btn-navy" style="margin-top:4px;">Update Account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- COMPANY DETAIL MODAL -->
+<div class="modal-overlay" id="modal-company">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-co-title">Company Details</div>
+      <button class="modal-close" onclick="closeModal('modal-company')">&#215;</button>
+    </div>
+    <div class="modal-body" id="modal-co-body"></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('modal-company')">Close</button>
+      <button class="btn btn-red btn-sm" id="modal-suspend-btn">Suspend Account</button>
+      <button class="btn btn-navy btn-sm" id="modal-edit-btn">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- TIER CHANGE MODAL -->
+<div class="modal-overlay" id="modal-tier">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-head">
+      <div class="modal-title">Change Tier</div>
+      <button class="modal-close" onclick="closeModal('modal-tier')">&#215;</button>
+    </div>
+    <div class="modal-body" id="modal-tier-body"></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('modal-tier')">Cancel</button>
+      <button class="btn btn-navy" onclick="saveTierChange()">Save Tier</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ DATA ══
+let COMPANIES = [
+  {id:'c1', name:'Risk Secured Ltd', reg:'14521890', contact:'David Foster', mobile:'07800 000001', email:'ops@risksecured.co.uk', tier:'professional', status:'active', sites:5, officers:7, mrr:99, trial:null, joined:'2026-01-15', color:'#0f2744'},
+  {id:'c2', name:'Shield Security West Mids', reg:'09123456', contact:'Mark Collins', mobile:'07800 000002', email:'mark@shieldsecurity.co.uk', tier:'starter', status:'active', sites:1, officers:4, mrr:50, trial:'2026-04-01', joined:'2026-02-20', color:'#1d6aff'},
+  {id:'c3', name:'Apex Guard Services', reg:'11234567', contact:'Sara Ahmed', mobile:'07800 000003', email:'sara@apexguard.co.uk', tier:'enterprise', status:'active', sites:6, officers:23, mrr:249, trial:null, joined:'2026-03-01', color:'#7c3aed'},
+];
+
+let ACTIVITY = [
+  {time:'Today 21:05', event:'Company Onboarded', company:'Apex Guard Services', detail:'Enterprise tier · activation email sent', color:'#16a34a'},
+  {time:'Today 20:41', event:'Tier Changed', company:'Shield Security West Mids', detail:'Free → Starter £50/mo', color:'#1d6aff'},
+  {time:'Today 19:30', event:'Login', company:'Risk Secured Ltd', detail:'Ops Manager signed in', color:'#64748b'},
+  {time:'Yesterday', event:'Company Onboarded', company:'Shield Security West Mids', detail:'Starter tier · activation email sent', color:'#16a34a'},
+  {time:'15 Jan 2026', event:'Company Onboarded', company:'Risk Secured Ltd', detail:'Professional tier · activation email sent', color:'#16a34a'},
+];
+
+let REQUESTS = [
+  {email:'info@centreguard.co.uk', time:'Today 18:22'},
+  {email:'ops@metrosecurity.co.uk', time:'Yesterday 14:05'},
+];
+
+const TIER_MRR = {starter:50, pro:99, enterprise:249};
+const TIER_LABELS = {starter:'Starter', pro:'Professional', enterprise:'Enterprise'};
+let selectedOnboardTier = 'starter';
+let editingTierId = null;
+
+// ══ NAV ══
+function showPage(id, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  const titles = {dashboard:'Platform Dashboard',companies:'Companies',onboard:'Onboard New Company',billing:'Billing & Tiers',activity:'Activity Log',settings:'Platform Settings'};
+  document.getElementById('page-title').textContent = titles[id]||id;
+  if(id==='companies') renderCompanies();
+  if(id==='billing') renderBilling();
+  if(id==='activity') renderActivityTable();
+}
+
+// ══ RENDER DASHBOARD ══
+function renderDashboard(){
+  // KPI
+  const totalMRR = COMPANIES.filter(c=>c.status==='active').reduce((s,c)=>s+c.mrr,0);
+  document.querySelector('.kpi-row .kpi:nth-child(1) .kpi-num').textContent = COMPANIES.filter(c=>c.status==='active').length;
+  document.querySelector('.kpi-row .kpi:nth-child(3) .kpi-num').textContent = '£'+totalMRR;
+
+  // Companies table
+  document.getElementById('dash-companies-table').innerHTML = COMPANIES.map(c=>`
+    <tr style="cursor:pointer;" onclick="openCompanyModal('${c.id}')">
+      <td><div class="tbl-name">${c.name}</div><div style="font-size:10px;color:var(--muted);">${c.contact}</div></td>
+      <td><span class="badge tier-${c.tier==='professional'?'pro':c.tier}">${TIER_LABELS[c.tier==='professional'?'pro':c.tier]||c.tier}</span></td>
+      <td>${c.sites}</td>
+      <td>${c.officers}</td>
+      <td style="font-weight:600;color:var(--green);">£${c.mrr}/mo</td>
+      <td><span class="badge badge-${c.status==='active'?'green':c.status==='suspended'?'red':'amber'}">${c.status}</span></td>
+      <td style="color:var(--muted);">${c.joined}</td>
+    </tr>`).join('');
+
+  // Tier bars
+  const tiers = [{label:'Enterprise',key:'enterprise',color:'#7c3aed'},{label:'Professional',key:'professional',color:'#1d6aff'},{label:'Starter',key:'starter',color:'#64748b'}];
+  document.getElementById('tier-bars').innerHTML = tiers.map(t=>{
+    const cos = COMPANIES.filter(c=>c.tier===t.key);
+    const rev = cos.reduce((s,c)=>s+c.mrr,0);
+    const pct = totalMRR>0?Math.round(rev/totalMRR*100):0;
+    return `<div class="stat-bar-row"><div class="stat-bar-head"><span style="font-size:11px;color:var(--text2);">${t.label} (${cos.length} co.)</span><span style="font-size:11px;font-weight:700;color:var(--navy2);">£${rev}/mo</span></div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%;background:${t.color};"></div></div></div>`;
+  }).join('');
+
+  // Activity
+  document.getElementById('dash-activity').innerHTML = ACTIVITY.slice(0,5).map(a=>`
+    <div class="activity-item">
+      <div class="activity-dot" style="background:${a.color};"></div>
+      <div class="activity-text"><strong>${a.event}</strong> — ${a.company}<br/><span style="color:var(--muted);font-size:11px;">${a.detail}</span></div>
+      <div class="activity-time">${a.time}</div>
+    </div>`).join('');
+
+  // Requests
+  document.getElementById('dash-requests').innerHTML = REQUESTS.length===0
+    ? '<div style="font-size:12px;color:var(--muted);">No pending requests.</div>'
+    : REQUESTS.map(r=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);">
+      <div style="flex:1;font-size:12px;"><div style="font-weight:600;color:var(--navy2);">${r.email}</div><div style="font-size:10px;color:var(--muted);">${r.time}</div></div>
+      <button class="btn btn-navy btn-sm" onclick="quickOnboard('${r.email}')">Onboard →</button>
+    </div>`).join('');
+}
+
+// ══ RENDER COMPANIES ══
+function renderCompanies(){
+  document.getElementById('companies-list').innerHTML = COMPANIES.map(c=>`
+    <div class="co-card">
+      <div class="co-av" style="background:${c.color};">${c.name[0]}</div>
+      <div style="flex:1;">
+        <div class="co-name">${c.name}</div>
+        <div class="co-meta">Reg: ${c.reg} · ${c.contact} · ${c.email}</div>
+        <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="badge tier-${c.tier==='professional'?'pro':c.tier}">${TIER_LABELS[c.tier==='professional'?'pro':c.tier]||c.tier}</span>
+          <span class="badge badge-${c.status==='active'?'green':'red'}">${c.status}</span>
+          <span class="badge badge-navy">${c.sites} sites</span>
+          <span class="badge badge-navy">${c.officers} officers</span>
+          <span class="badge badge-green">£${c.mrr}/mo</span>
+        </div>
+      </div>
+      <div class="co-actions">
+        <button class="btn btn-outline btn-sm" onclick="openCompanyModal('${c.id}')">Manage</button>
+        <button class="btn btn-sm ${c.status==='active'?'btn-red':'btn-green'}" onclick="toggleSuspend('${c.id}')">${c.status==='active'?'Suspend':'Reactivate'}</button>
+      </div>
+    </div>`).join('');
+}
+
+// ══ RENDER BILLING ══
+function renderBilling(){
+  document.getElementById('billing-table').innerHTML = COMPANIES.map(c=>`
+    <tr>
+      <td><div class="tbl-name">${c.name}</div><div style="font-size:10px;color:var(--muted);">${c.email}</div></td>
+      <td><span class="badge tier-${c.tier==='professional'?'pro':c.tier}">${TIER_LABELS[c.tier==='professional'?'pro':c.tier]||c.tier}</span></td>
+      <td style="font-weight:700;color:var(--green);">£${c.mrr}/mo</td>
+      <td style="color:var(--muted);">${c.trial||'—'}</td>
+      <td><span class="badge badge-${c.status==='active'?'green':'red'}">${c.status}</span></td>
+      <td><button class="btn btn-outline btn-sm" onclick="openTierModal('${c.id}')">Change Tier</button></td>
+    </tr>`).join('');
+}
+
+// ══ RENDER ACTIVITY TABLE ══
+function renderActivityTable(){
+  document.getElementById('activity-table').innerHTML = ACTIVITY.map(a=>`
+    <tr>
+      <td style="color:var(--muted);white-space:nowrap;">${a.time}</td>
+      <td><span class="badge badge-navy">${a.event}</span></td>
+      <td style="font-weight:600;">${a.company}</td>
+      <td style="color:var(--muted);">${a.detail}</td>
+    </tr>`).join('');
+}
+
+// ══ COMPANY MODAL ══
+function openCompanyModal(id){
+  const c = COMPANIES.find(x=>x.id===id);
+  if(!c) return;
+  document.getElementById('modal-co-title').textContent = c.name;
+  document.getElementById('modal-co-body').innerHTML = `
+    <div class="form-2">
+      <div class="field-group"><label class="field-label">Company Name</label><input class="field" id="mc-name" value="${c.name}"/></div>
+      <div class="field-group"><label class="field-label">Reg No.</label><input class="field" id="mc-reg" value="${c.reg}"/></div>
+    </div>
+    <div class="form-2">
+      <div class="field-group"><label class="field-label">Contact</label><input class="field" id="mc-contact" value="${c.contact}"/></div>
+      <div class="field-group"><label class="field-label">Mobile</label><input class="field" id="mc-mobile" value="${c.mobile}"/></div>
+    </div>
+    <div class="field-group"><label class="field-label">Ops Manager Email</label><input class="field" id="mc-email" value="${c.email}"/></div>
+    <div class="form-3" style="margin-top:14px;">
+      <div style="background:#f8fafc;border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);">Sites</div><div style="font-size:20px;font-weight:700;color:var(--navy2);">${c.sites}</div></div>
+      <div style="background:#f8fafc;border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);">Officers</div><div style="font-size:20px;font-weight:700;color:var(--navy2);">${c.officers}</div></div>
+      <div style="background:#f8fafc;border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;"><div style="font-size:10px;color:var(--muted);">MRR</div><div style="font-size:20px;font-weight:700;color:var(--green);">£${c.mrr}</div></div>
+    </div>`;
+
+  document.getElementById('modal-suspend-btn').textContent = c.status==='active'?'Suspend Account':'Reactivate Account';
+  document.getElementById('modal-suspend-btn').onclick = ()=>{ toggleSuspend(id); closeModal('modal-company'); renderDashboard(); };
+  document.getElementById('modal-edit-btn').onclick = ()=>{
+    c.name = document.getElementById('mc-name').value;
+    c.contact = document.getElementById('mc-contact').value;
+    c.email = document.getElementById('mc-email').value;
+    c.reg = document.getElementById('mc-reg').value;
+    c.mobile = document.getElementById('mc-mobile').value;
+    closeModal('modal-company');
+    renderDashboard();
+    addActivity('Details Updated', c.name, 'Company details edited by super admin');
+  };
+  document.getElementById('modal-company').classList.add('open');
+}
+
+// ══ TIER MODAL ══
+function openTierModal(id){
+  editingTierId = id;
+  const c = COMPANIES.find(x=>x.id===id);
+  document.getElementById('modal-tier-body').innerHTML = `
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Changing tier for <strong>${c.name}</strong></p>
+    <div class="field-group"><label class="field-label">New Tier</label>
+    <select class="field" id="tier-select">
+      <option value="starter" ${c.tier==='starter'?'selected':''}>Starter — £50/mo</option>
+      <option value="professional" ${c.tier==='professional'?'selected':''}>Professional — £99/mo</option>
+      <option value="enterprise" ${c.tier==='enterprise'?'selected':''}>Enterprise — £249/mo</option>
+    </select></div>`;
+  document.getElementById('modal-tier').classList.add('open');
+}
+function saveTierChange(){
+  const c = COMPANIES.find(x=>x.id===editingTierId);
+  const newTier = document.getElementById('tier-select').value;
+  const mrrs = {starter:50, professional:99, enterprise:249};
+  const old = c.tier;
+  c.tier = newTier;
+  c.mrr = mrrs[newTier];
+  addActivity('Tier Changed', c.name, `${TIER_LABELS[old==='professional'?'pro':old]||old} → ${TIER_LABELS[newTier==='professional'?'pro':newTier]||newTier}`);
+  closeModal('modal-tier');
+  renderBilling();
+  renderDashboard();
+}
+
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+// ══ SUSPEND ══
+function toggleSuspend(id){
+  const c = COMPANIES.find(x=>x.id===id);
+  const was = c.status;
+  c.status = c.status==='active'?'suspended':'active';
+  addActivity(c.status==='suspended'?'Account Suspended':'Account Reactivated', c.name, `Status changed from ${was} to ${c.status}`);
+  renderCompanies();
+  renderDashboard();
+}
+
+// ══ ONBOARD ══
+function selectTier(tier, el){
+  selectedOnboardTier = tier;
+  document.querySelectorAll('.tier-option').forEach(t=>{ t.style.border='2px solid var(--border)'; t.style.background=''; });
+  el.style.border='2px solid var(--navy2)';
+  el.style.background='#f8fafc';
+  updateEmailPreview();
+}
+function updateEmailPreview(){
+  const name = document.getElementById('co-name').value||'[Company Name]';
+  const email = document.getElementById('co-email').value||'[ops manager email]';
+  const contact = document.getElementById('co-contact').value||'[Contact Name]';
+  const tiers = {starter:'Starter £50/mo', pro:'Professional £99/mo', enterprise:'Enterprise £249/mo'};
+  document.getElementById('email-preview').innerHTML = `
+    <strong>To:</strong> ${email}<br/>
+    <strong>Subject:</strong> Welcome to DOB·LIVE — Your account is ready<br/><br/>
+    Hi ${contact},<br/><br/>
+    Your DOB·LIVE account for <strong>${name}</strong> has been activated on the <strong>${tiers[selectedOnboardTier]}</strong> plan.<br/><br/>
+    Sign in at: <strong>app.doblive.co.uk/login.html</strong><br/>
+    Your email: <strong>${email}</strong><br/>
+    Temporary password: <strong>DOB-${Math.random().toString(36).slice(2,8).toUpperCase()}</strong><br/><br/>
+    You will be asked to set your own password on first login.<br/><br/>
+    If you have any questions contact us at onboarding@doblive.co.uk<br/><br/>
+    — The DOB·LIVE Team`;
+}
+['co-name','co-email','co-contact'].forEach(id=>{
+  setTimeout(()=>{ const el=document.getElementById(id); if(el) el.addEventListener('input', updateEmailPreview); },100);
+});
+function onboardCompany(){
+  const name=document.getElementById('co-name').value.trim();
+  const email=document.getElementById('co-email').value.trim();
+  const contact=document.getElementById('co-contact').value.trim();
+  if(!name||!email||!contact){ alert('Please fill in Company Name, Contact Name and Ops Manager Email.'); return; }
+  const mrrs={starter:50,pro:99,enterprise:249,professional:99};
+  const newCo={
+    id:'c'+Date.now(), name, reg:document.getElementById('co-reg').value,
+    contact, mobile:document.getElementById('co-mobile').value,
+    email, tier:selectedOnboardTier==='pro'?'professional':selectedOnboardTier,
+    status:'active', sites:0, officers:0,
+    mrr:mrrs[selectedOnboardTier],
+    trial:document.getElementById('co-trial').value?
+      new Date(Date.now()+parseInt(document.getElementById('co-trial').value)*864e5).toISOString().slice(0,10):null,
+    joined:new Date().toISOString().slice(0,10),
+    color:['#0f2744','#1d6aff','#7c3aed','#0891b2','#16a34a'][Math.floor(Math.random()*5)]
+  };
+  COMPANIES.push(newCo);
+  addActivity('Company Onboarded', name, `${TIER_LABELS[selectedOnboardTier]||selectedOnboardTier} tier · activation email sent to ${email}`);
+  document.getElementById('onboard-success').style.display='block';
+  document.getElementById('nb-companies').textContent=COMPANIES.length;
+  renderDashboard();
+  setTimeout(()=>document.getElementById('onboard-success').style.display='none',4000);
+}
+function clearOnboardForm(){
+  ['co-name','co-reg','co-contact','co-mobile','co-email'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('co-trial').value='60';
+  updateEmailPreview();
+}
+function quickOnboard(email){
+  showPage('onboard', document.querySelectorAll('.nav-item')[2]);
+  document.getElementById('co-email').value=email;
+  updateEmailPreview();
+}
+function addActivity(event, company, detail){
+  const now=new Date();
+  ACTIVITY.unshift({time:'Today '+now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}), event, company, detail, color:'#16a34a'});
+}
+
+// ══ INIT ══
+renderDashboard();
+updateEmailPreview();
+</script>
+</body>
+</html>

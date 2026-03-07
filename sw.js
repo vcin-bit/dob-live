@@ -5,6 +5,7 @@ const ASSETS = [
   '/officer-dob-page.html',
   '/ops-manager.html',
   '/client-portal.html',
+  '/super-admin.html',
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png'

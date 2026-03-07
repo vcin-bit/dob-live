@@ -218,6 +218,10 @@ button,input,select{font-family:inherit;}
           <div class="role-btn-icon">🏢</div>
           <div class="role-btn-label">Client</div>
         </button>
+        <button class="role-btn" data-role="superadmin" onclick="selectRole(this)" style="grid-column:span 2;border-color:#dc2626;background:#fef2f2;">
+          <div class="role-btn-icon" style="font-size:14px;">&#9670;</div>
+          <div class="role-btn-label" style="color:#dc2626;">PSIN Super Admin</div>
+        </button>
       </div>
 
       <div class="divider"><div class="divider-line"></div><div class="divider-text">credentials</div><div class="divider-line"></div></div>
@@ -268,9 +272,10 @@ const ACCOUNTS = [
   {role:'ops',     email:'fletcher@risksecured.co.uk', password:'fletcher123', name:'Fletcher, P.', display:'Ops Manager · Risk Secured', color:'#1d6aff', dest:'ops-manager.html'},
   {role:'head',    email:'davies@risksecured.co.uk',   password:'davies123',   name:'Davies, K.',   display:'Head of Operations · Risk Secured', color:'#7c3aed', dest:'ops-manager.html'},
   {role:'client',  email:'brindleyplace@bid.co.uk',    password:'client123',   name:'Brindleyplace BID', display:'Client · Brindleyplace', color:'#0891b2', dest:'client-portal.html'},
+  {role:'superadmin', email:'admin@psingroup.co.uk', password:'psin-admin-2026', name:'Foster, David', display:'Super Admin · PSIN Group', color:'#dc2626', dest:'super-admin.html'},
 ];
 
-const ROLE_LABELS = {officer:'Security Officer', ops:'Ops Manager', head:'Head of Operations', client:'Client'};
+const ROLE_LABELS = {officer:'Security Officer', ops:'Ops Manager', head:'Head of Operations', client:'Client', superadmin:'Super Admin'};
 let selectedRole = 'officer';
 
 // ══ ROLE SELECT ══

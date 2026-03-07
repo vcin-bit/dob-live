@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>DOB·LIVE — Sign In</title>
+<meta name="description" content="DOB·LIVE — Sign in to your portal"/>
+<meta name="theme-color" content="#0f2744"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="DOB·LIVE"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0f2744;--navy2:#1e3a5f;--navy3:#2d5282;
+  --cyan:#00d4ff;--blue:#1d6aff;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.15);
+  --muted:#64748b;--text:#e2e8f0;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-bd:#bbf7d0;
+  --red:#dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{
+  min-height:100%;min-height:100dvh;
+  font-family:'DM Sans',sans-serif;
+  background:var(--navy);color:var(--text);
+  overflow-x:hidden;
+}
+button,input,select{font-family:inherit;}
+
+/* BG */
+.bg{
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 30% 60%, rgba(29,106,255,.1) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 20%, rgba(0,212,255,.06) 0%, transparent 50%),
+    var(--navy);
+  z-index:0;
+}
+.bg-grid{
+  position:fixed;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+  background-size:50px 50px;
+  z-index:1;
+}
+
+/* WRAP */
+.wrap{
+  position:relative;z-index:10;
+  min-height:100vh;min-height:100dvh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px 20px;
+  padding-top:calc(24px + env(safe-area-inset-top));
+  padding-bottom:calc(24px + env(safe-area-inset-bottom));
+}
+
+/* BRAND */
+.brand{text-align:center;margin-bottom:28px;}
+.brand-mark{
+  width:60px;height:60px;background:#fff;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:28px;color:var(--navy);
+  margin:0 auto 12px;
+  box-shadow:0 8px 32px rgba(0,0,0,.25);
+}
+.brand-name{font-size:22px;font-weight:700;color:#fff;letter-spacing:.02em;}
+.brand-name span{color:var(--cyan);}
+.brand-sub{font-size:12px;color:rgba(255,255,255,.35);margin-top:4px;letter-spacing:.04em;}
+
+/* CARD */
+.card{
+  width:100%;max-width:400px;
+  background:#fff;border-radius:14px;
+  box-shadow:0 24px 64px rgba(0,0,0,.35);
+  overflow:hidden;
+}
+.card-head{
+  background:var(--navy2);padding:16px 22px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.card-head-title{font-size:14px;font-weight:700;color:#fff;}
+.card-head-sub{font-size:11px;color:rgba(148,197,253,.7);margin-top:2px;}
+.card-body{padding:22px;}
+
+/* FORM */
+.field-label{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.field{
+  width:100%;border:1px solid #e2e8f0;border-radius:7px;
+  padding:11px 13px;font-size:14px;color:#0f172a;
+  outline:none;transition:border .15s,box-shadow .15s;background:#fff;
+}
+.field:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(15,39,68,.08);}
+.field-group{margin-bottom:14px;}
+
+/* ROLE SELECTOR */
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:16px;}
+.role-btn{
+  border:1px solid #e2e8f0;border-radius:8px;padding:10px 8px;
+  background:#fff;cursor:pointer;text-align:center;transition:all .15s;
+}
+.role-btn:hover{border-color:var(--navy);background:#f8fafc;}
+.role-btn.selected{border-color:var(--navy);background:#f0f4f8;box-shadow:0 0 0 2px rgba(15,39,68,.1);}
+.role-btn-icon{font-size:18px;margin-bottom:4px;}
+.role-btn-label{font-size:11px;font-weight:600;color:#334155;}
+.role-btn.selected .role-btn-label{color:var(--navy);}
+
+/* DIVIDER */
+.divider{display:flex;align-items:center;gap:8px;margin:14px 0;}
+.divider-line{flex:1;height:1px;background:#e2e8f0;}
+.divider-text{font-size:11px;color:var(--muted);}
+
+/* BUTTONS */
+.btn-signin{
+  width:100%;background:var(--navy);color:#fff;border:none;
+  padding:12px;border-radius:7px;font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .15s;margin-top:16px;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.btn-signin:hover{background:var(--navy2);}
+.btn-signin:active{transform:scale(.98);}
+.btn-signin:disabled{opacity:.6;cursor:not-allowed;}
+
+/* ERROR */
+.error{
+  background:#fef2f2;border:1px solid #fecaca;border-radius:6px;
+  padding:9px 12px;font-size:12px;color:var(--red);
+  margin-bottom:14px;display:none;
+}
+.error.show{display:block;}
+
+/* DEMO ACCOUNTS */
+.demo-section{width:100%;max-width:400px;margin-top:20px;}
+.demo-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:8px;text-align:center;}
+.demo-list{display:flex;flex-direction:column;gap:5px;}
+.demo-row{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:8px;padding:8px 12px;cursor:pointer;transition:all .15s;
+}
+.demo-row:hover{background:rgba(255,255,255,.08);}
+.demo-av{
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.demo-info{flex:1;}
+.demo-name{font-size:12px;font-weight:600;color:#e2e8f0;}
+.demo-role{font-size:10px;color:rgba(255,255,255,.35);margin-top:1px;}
+.demo-arrow{font-size:11px;color:rgba(255,255,255,.2);}
+
+/* LOADING */
+.spinner{
+  width:18px;height:18px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin .7s linear infinite;display:none;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* INSTALL BANNER */
+.install-banner{
+  width:100%;max-width:400px;margin-top:14px;
+  background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.15);
+  border-radius:8px;padding:10px 14px;
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;transition:all .15s;
+}
+.install-banner:hover{background:rgba(0,212,255,.12);}
+.install-text{flex:1;}
+.install-title{font-size:12px;font-weight:600;color:#e2e8f0;}
+.install-sub{font-size:10px;color:rgba(255,255,255,.35);margin-top:1px;}
+.install-btn{font-size:11px;font-weight:700;color:var(--cyan);white-space:nowrap;}
+
+/* FOOTER */
+.login-footer{margin-top:20px;text-align:center;font-size:10px;color:rgba(255,255,255,.15);}
+.login-footer a{color:rgba(255,255,255,.25);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="bg-grid"></div>
+
+<div class="wrap">
+  <div class="brand">
+    <div class="brand-mark">D</div>
+    <div class="brand-name">DOB<span>·LIVE</span></div>
+    <div class="brand-sub">DIGITAL OCCURRENCE BOOK</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-head-title">Sign In</div>
+      <div class="card-head-sub">Select your role then enter your credentials</div>
+    </div>
+    <div class="card-body">
+      <div class="error" id="login-error">Incorrect email or password. Please try again.</div>
+
+      <!-- ROLE SELECTOR -->
+      <div style="margin-bottom:6px;"><label class="field-label">I am a...</label></div>
+      <div class="role-grid" id="role-grid">
+        <button class="role-btn selected" data-role="officer" onclick="selectRole(this)">
+          <div class="role-btn-icon">🪪</div>
+          <div class="role-btn-label">Security Officer</div>
+        </button>
+        <button class="role-btn" data-role="ops" onclick="selectRole(this)">
+          <div class="role-btn-icon">⚙</div>
+          <div class="role-btn-label">Ops Manager</div>
+        </button>
+        <button class="role-btn" data-role="head" onclick="selectRole(this)">
+          <div class="role-btn-icon">📊</div>
+          <div class="role-btn-label">Head of Operations</div>
+        </button>
+        <button class="role-btn" data-role="client" onclick="selectRole(this)">
+          <div class="role-btn-icon">🏢</div>
+          <div class="role-btn-label">Client</div>
+        </button>
+      </div>
+
+      <div class="divider"><div class="divider-line"></div><div class="divider-text">credentials</div><div class="divider-line"></div></div>
+
+      <div class="field-group">
+        <label class="field-label">Email Address</label>
+        <input class="field" type="email" id="login-email" placeholder="your@email.com" autocomplete="email"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Password</label>
+        <input class="field" type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter')attemptLogin()"/>
+      </div>
+
+      <button class="btn-signin" id="signin-btn" onclick="attemptLogin()">
+        <span id="btn-text">Sign In</span>
+        <div class="spinner" id="btn-spinner"></div>
+        <span id="btn-arrow">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- DEMO ACCOUNTS -->
+  <div class="demo-section">
+    <div class="demo-label">Demo accounts</div>
+    <div class="demo-list" id="demo-list"></div>
+  </div>
+
+  <!-- INSTALL BANNER -->
+  <div class="install-banner" id="install-banner" style="display:none;" onclick="installApp()">
+    <div class="install-text">
+      <div class="install-title">Add DOB·LIVE to your home screen</div>
+      <div class="install-sub">Install the app for quick access on shift</div>
+    </div>
+    <div class="install-btn">Install →</div>
+  </div>
+
+  <div class="login-footer">
+    <a href="https://doblive.co.uk">doblive.co.uk</a> &nbsp;·&nbsp; A PSIN Group product
+  </div>
+</div>
+
+<script>
+// ══ ACCOUNTS ══
+const ACCOUNTS = [
+  {role:'officer', email:'j.harris@risksecured.co.uk', password:'harris123', name:'Harris, James', display:'Security Officer · Brindleyplace', color:'#0f2744', dest:'officer-dob-page.html'},
+  {role:'officer', email:'t.dawson@risksecured.co.uk', password:'dawson123', name:'Dawson, Terry',  display:'Supervisor · Merry Hill', color:'#1e3a5f', dest:'officer-login.html'},
+  {role:'ops',     email:'fletcher@risksecured.co.uk', password:'fletcher123', name:'Fletcher, P.', display:'Ops Manager · Risk Secured', color:'#1d6aff', dest:'ops-manager.html'},
+  {role:'head',    email:'davies@risksecured.co.uk',   password:'davies123',   name:'Davies, K.',   display:'Head of Operations · Risk Secured', color:'#7c3aed', dest:'ops-manager.html'},
+  {role:'client',  email:'brindleyplace@bid.co.uk',    password:'client123',   name:'Brindleyplace BID', display:'Client · Brindleyplace', color:'#0891b2', dest:'client-portal.html'},
+];
+
+const ROLE_LABELS = {officer:'Security Officer', ops:'Ops Manager', head:'Head of Operations', client:'Client'};
+let selectedRole = 'officer';
+
+// ══ ROLE SELECT ══
+function selectRole(btn){
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedRole = btn.dataset.role;
+  buildDemoList();
+  document.getElementById('login-error').classList.remove('show');
+}
+
+// ══ DEMO LIST ══
+function buildDemoList(){
+  const filtered = ACCOUNTS.filter(a=>a.role===selectedRole);
+  document.getElementById('demo-list').innerHTML = filtered.map(a=>`
+    <div class="demo-row" onclick="fillDemo('${a.email}','${a.password}')">
+      <div class="demo-av" style="background:${a.color};">${a.name.split(',')[0][0]}${a.name.split(' ').pop()[0]}</div>
+      <div class="demo-info">
+        <div class="demo-name">${a.name}</div>
+        <div class="demo-role">${a.display}</div>
+      </div>
+      <div class="demo-arrow">→</div>
+    </div>`).join('');
+}
+
+function fillDemo(email, password){
+  document.getElementById('login-email').value = email;
+  document.getElementById('login-password').value = password;
+  document.getElementById('login-error').classList.remove('show');
+}
+
+// ══ LOGIN ══
+function attemptLogin(){
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('login-password').value;
+  const err   = document.getElementById('login-error');
+
+  if(!email||!pass){ err.classList.add('show'); return; }
+
+  const account = ACCOUNTS.find(a=>a.email===email && a.password===pass && a.role===selectedRole);
+  if(!account){ err.classList.add('show'); return; }
+
+  err.classList.remove('show');
+
+  // Show loading state
+  const btn = document.getElementById('signin-btn');
+  document.getElementById('btn-text').textContent = 'Signing in';
+  document.getElementById('btn-arrow').style.display = 'none';
+  document.getElementById('btn-spinner').style.display = 'block';
+  btn.disabled = true;
+
+  // Store session
+  sessionStorage.setItem('dob_user', JSON.stringify({name:account.name, role:account.role, email:account.email}));
+
+  setTimeout(()=>{ window.location.href = account.dest; }, 800);
+}
+
+// ══ PWA INSTALL ══
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').style.display = 'flex';
+});
+function installApp(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(()=>{ 
+    deferredPrompt = null;
+    document.getElementById('install-banner').style.display = 'none';
+  });
+}
+window.addEventListener('appinstalled',()=>{
+  document.getElementById('install-banner').style.display = 'none';
+});
+
+// ══ SERVICE WORKER ══
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js').catch(()=>{});
+}
+
+// ══ INIT ══
+buildDemoList();
+</script>
+</body>
+</html>

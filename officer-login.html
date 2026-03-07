@@ -181,6 +181,12 @@ button,input,textarea,select{font-family:inherit;}
 .error-msg{background:var(--red-bg);border:1px solid var(--red-bd);border-radius:6px;padding:10px 12px;font-size:13px;color:var(--red);margin-bottom:16px;display:none;}
 .error-msg.show{display:block;}
 </style>
+<meta name="theme-color" content="#0f2744"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="DOB·LIVE"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
 </head>
 <body>
 
@@ -585,6 +591,10 @@ function launchDOB(){
 // INIT
 // ══════════════════════════════════
 init();
+</script>
+
+<script>
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('/sw.js').catch(()=>{}); }
 </script>
 </body>
 </html>

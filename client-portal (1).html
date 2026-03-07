@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>DOB·LIVE — Client Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0f2744;--navy2:#1e3a5f;
+  --bg:#f0f4f8;
+  --border:#e2e8f0;--border2:#cbd5e1;
+  --text:#0f172a;--text2:#334155;--muted:#64748b;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-bd:#bbf7d0;
+  --red:#dc2626;--red-bg:#fef2f2;--red-bd:#fecaca;
+  --blue:#1d4ed8;--blue-bg:#eff6ff;--blue-bd:#bfdbfe;
+  --amber:#d97706;--amber-bg:#fffbeb;--amber-bd:#fde68a;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-bd:#ddd6fe;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);}
+button,input,textarea{font-family:inherit;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:2px;}
+
+/* LOGIN */
+#login-screen{min-height:100vh;background:var(--navy);display:flex;align-items:center;justify-content:center;padding:24px;}
+.login-box{background:#fff;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.25);padding:32px;width:100%;max-width:400px;}
+.login-brand{text-align:center;margin-bottom:24px;}
+.login-icon{width:52px;height:52px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-weight:700;font-size:22px;color:#fff;}
+.login-title{font-size:22px;font-weight:700;color:var(--navy);}
+.login-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+.role-pill{display:inline-block;font-size:11px;font-weight:700;background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd);padding:2px 10px;border-radius:10px;margin-top:6px;}
+.clients-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;}
+.client-row{border:1px solid var(--border);border-radius:6px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:7px;transition:all .15s;}
+.client-row:hover{border-color:var(--navy);box-shadow:0 2px 8px rgba(15,39,68,.08);}
+.c-avatar{width:30px;height:30px;border-radius:50%;background:var(--navy2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.c-name{font-size:13px;font-weight:600;}
+.c-site{font-size:11px;color:var(--muted);}
+
+/* APP */
+#app{display:none;min-height:100vh;flex-direction:column;}
+#app.on{display:flex;}
+
+.topnav{background:var(--navy);padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;flex-shrink:0;}
+.nav-brand{display:flex;align-items:center;gap:9px;}
+.nav-dot{width:28px;height:28px;background:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--navy);}
+.nav-n{font-size:14px;font-weight:700;color:#fff;}
+.nav-s{font-size:9px;color:#93c5fd;letter-spacing:.08em;margin-top:1px;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.nav-clock{font-family:'DM Mono',monospace;font-size:13px;color:#e2e8f0;}
+.nav-av{width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.nav-uname{font-size:12px;font-weight:600;color:#fff;}
+.nav-urole{font-size:10px;font-weight:700;background:rgba(124,58,237,.3);color:#c4b5fd;padding:2px 8px;border-radius:10px;border:1px solid rgba(124,58,237,.4);}
+.signout{background:none;border:1px solid #ffffff22;color:#94a3b8;font-size:12px;padding:5px 10px;border-radius:4px;cursor:pointer;}
+.signout:hover{border-color:#ffffff55;color:#fff;}
+
+.site-banner{background:var(--navy2);border-bottom:1px solid #1a3050;padding:10px 20px;}
+.sb-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.sb-name{font-size:14px;font-weight:700;color:#fff;}
+.sb-detail{font-size:11px;color:#93c5fd;margin-top:2px;}
+.live-pill{display:flex;align-items:center;gap:6px;background:#ffffff0a;border:1px solid #ffffff15;padding:5px 12px;border-radius:20px;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.live-txt{font-size:11px;color:#d1fae5;font-weight:600;}
+
+.tab-bar{background:#fff;border-bottom:1px solid var(--border);padding:0 20px;display:flex;position:sticky;top:54px;z-index:100;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.tab{padding:14px 16px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;transition:all .15s;display:flex;align-items:center;gap:6px;}
+.tab:hover{color:var(--navy);}
+.tab.active{color:var(--navy);font-weight:700;border-bottom-color:var(--navy);}
+.tbadge{font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;}
+
+.main{max-width:960px;margin:0 auto;width:100%;padding:20px 20px 50px;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* STATUS COUNTS */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center;border-top:3px solid;cursor:pointer;transition:box-shadow .15s;}
+.stat-card:hover{box-shadow:0 3px 10px rgba(0,0,0,.08);}
+.stat-num{font-size:28px;font-weight:700;line-height:1;}
+.stat-label{font-size:11px;font-weight:600;color:var(--muted);margin-top:5px;}
+
+/* FILTER CHIPS */
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.chip{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border2);background:#fff;color:var(--muted);cursor:pointer;transition:all .15s;}
+.chip:hover{border-color:var(--navy);}
+.chip.on{font-weight:700;border-color:var(--navy);color:var(--navy);background:var(--blue-bg);}
+
+/* ACTION POINT CARD */
+.ap-card{background:#fff;border:1px solid var(--border);border-radius:9px;margin-bottom:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.05);transition:box-shadow .2s;}
+.ap-card:hover{box-shadow:0 3px 12px rgba(0,0,0,.08);}
+.ap-head{padding:13px 16px;display:flex;align-items:flex-start;gap:10px;border-left:5px solid;}
+.ap-icon{font-size:18px;flex-shrink:0;margin-top:2px;}
+.ap-head-body{flex:1;min-width:0;}
+.ap-type-label{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:3px;}
+.ap-title{font-size:14px;font-weight:600;color:var(--text);}
+.ap-meta{font-size:11px;color:var(--muted);margin-top:3px;}
+.status-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:4px 11px;border-radius:4px;border:1px solid;flex-shrink:0;white-space:nowrap;}
+
+/* THREAD */
+.thread{padding:12px 16px;display:flex;flex-direction:column;gap:10px;}
+.t-item{display:flex;gap:9px;align-items:flex-start;}
+.t-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
+.t-bubble{flex:1;border-radius:7px;padding:9px 12px;border:1px solid;}
+.t-from{font-size:11px;font-weight:700;margin-bottom:3px;}
+.t-text{font-size:13px;color:var(--text2);line-height:1.55;}
+.t-time{font-size:10px;color:var(--muted);margin-top:5px;font-family:'DM Mono',monospace;}
+
+/* COMMENT BOX */
+.comment-box{border-top:1px solid var(--border);padding:12px 16px;background:#fafafa;}
+.comment-ta{width:100%;border:1px solid var(--border2);border-radius:6px;padding:9px 11px;font-size:13px;resize:none;outline:none;line-height:1.5;transition:border .15s,box-shadow .15s;background:#fff;}
+.comment-ta:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,.07);}
+.comment-foot{display:flex;justify-content:flex-end;margin-top:8px;}
+.comment-btn{background:var(--purple);color:#fff;border:none;padding:7px 16px;border-radius:5px;font-size:12px;font-weight:600;cursor:pointer;transition:background .15s;}
+.comment-btn:hover{background:#6d28d9;}
+
+/* RESOLVED BANNER */
+.resolved-bar{background:var(--green-bg);border-top:1px solid var(--green-bd);padding:10px 16px;display:flex;align-items:center;gap:8px;}
+.resolved-bar-text{font-size:12px;font-weight:600;color:var(--green);flex:1;}
+
+/* COMPOSE */
+.compose-card{background:#fff;border:2px solid var(--purple);border-radius:10px;padding:16px 18px;margin-bottom:20px;box-shadow:0 2px 12px rgba(124,58,237,.1);}
+.compose-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.compose-title{font-size:14px;font-weight:700;color:var(--navy);}
+.compose-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.compose-ta{width:100%;border:1px solid var(--border2);border-radius:6px;padding:10px 12px;font-size:14px;resize:none;outline:none;line-height:1.5;transition:border .15s,box-shadow .15s;}
+.compose-ta:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,.08);}
+.compose-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
+.compose-hint{font-size:11px;color:var(--muted);}
+.send-btn{background:var(--purple);color:#fff;border:none;padding:9px 20px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.send-btn:hover{background:#6d28d9;}
+
+/* MESSAGE CARD */
+.msg-card{background:#fff;border:1px solid var(--purple-bd);border-radius:9px;margin-bottom:12px;overflow:hidden;border-left:5px solid var(--purple);}
+.msg-head{padding:10px 16px;background:var(--purple-bg);display:flex;align-items:center;justify-content:space-between;}
+.msg-from{font-size:12px;font-weight:700;color:var(--purple);}
+.msg-time{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+.msg-body{padding:12px 16px;font-size:13px;color:var(--text2);line-height:1.5;}
+.msg-ack{padding:8px 16px;border-top:1px solid var(--purple-bd);background:#faf9ff;font-size:12px;display:flex;align-items:center;gap:6px;}
+.ack-spin{width:11px;height:11px;border:2px solid var(--border2);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* FULL LOG ENTRY */
+.log-entry{background:#fff;border:1px solid var(--border);border-radius:8px;border-left:4px solid;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+
+/* FLASH */
+.flash{background:var(--green-bg);border:1px solid var(--green-bd);border-radius:7px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:8px;animation:slideIn .25s ease;}
+@keyframes slideIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+
+.readonly-note{background:#f8fafc;border:1px solid var(--border);border-radius:6px;padding:8px 14px;font-size:11px;color:var(--muted);margin-bottom:14px;}
+.empty{text-align:center;padding:50px 20px;}
+.empty-icon{font-size:40px;margin-bottom:10px;}
+.empty-title{font-size:15px;font-weight:600;color:var(--text2);margin-bottom:4px;}
+.empty-sub{font-size:13px;color:var(--muted);}
+</style>
+<meta name="theme-color" content="#0f2744"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="DOB·LIVE"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-brand">
+      <div class="login-icon">D</div>
+      <div class="login-title">DOB·LIVE</div>
+      <div class="login-sub">Client Site Portal</div>
+      <span class="role-pill">Read-Only Access</span>
+    </div>
+    <div class="clients-label">Select your account</div>
+    <div class="client-row" onclick="login('c1')"><div class="c-avatar">BP</div><div><div class="c-name">Brindleyplace BID</div><div class="c-site">Brindleyplace, Birmingham</div></div></div>
+    <div class="client-row" onclick="login('c2')"><div class="c-avatar">MH</div><div><div class="c-name">Merry Hill Management</div><div class="c-site">Merry Hill Centre, Dudley</div></div></div>
+    <div class="client-row" onclick="login('c3')"><div class="c-avatar">WC</div><div><div class="c-name">City of Wolverhampton</div><div class="c-site">Wolverhampton Civic</div></div></div>
+    <div class="client-row" onclick="login('c4')"><div class="c-avatar">WB</div><div><div class="c-name">Walsall BID</div><div class="c-site">Walsall Town Centre</div></div></div>
+    <div class="client-row" onclick="login('c5')"><div class="c-avatar">CC</div><div><div class="c-name">Coventry City Council</div><div class="c-site">Coventry Ring Road</div></div></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topnav">
+    <div class="nav-brand">
+      <div class="nav-dot">D</div>
+      <div><div class="nav-n">DOB·LIVE</div><div class="nav-s">CLIENT PORTAL</div></div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-clock" id="nav-clock"></div>
+      <div style="width:1px;height:22px;background:#ffffff18;"></div>
+      <div style="display:flex;align-items:center;gap:7px;">
+        <div class="nav-av" id="nav-av"></div>
+        <div><div class="nav-uname" id="nav-uname"></div><div class="nav-urole">Client Portal</div></div>
+      </div>
+      <button class="signout" onclick="signOut()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="site-banner">
+    <div class="sb-inner">
+      <div><div class="sb-name" id="sb-name"></div><div class="sb-detail" id="sb-detail"></div></div>
+      <div class="live-pill"><div class="live-dot"></div><span class="live-txt">LIVE</span></div>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab active" onclick="showTab('ap',this)">⚡ Action Points <span class="tbadge" id="tb-ap" style="background:var(--red-bg);color:var(--red);"></span></button>
+    <button class="tab" onclick="showTab('msg',this)">💬 Messages <span class="tbadge" id="tb-msg" style="background:var(--purple-bg);color:var(--purple);"></span></button>
+    <button class="tab" onclick="showTab('log',this)">📋 Full Log</button>
+  </div>
+
+  <div class="main">
+
+    <!-- ACTION POINTS -->
+    <div class="page active" id="page-ap">
+      <div class="stat-row" id="ap-stats"></div>
+      <div class="chips" id="ap-chips"></div>
+      <div id="ap-flash"></div>
+      <div id="ap-list"></div>
+    </div>
+
+    <!-- MESSAGES -->
+    <div class="page" id="page-msg">
+      <div class="compose-card">
+        <div class="compose-head">
+          <span style="font-size:18px;">💬</span>
+          <div><div class="compose-title">Send a Note to the Duty Officer</div><div class="compose-sub">Appears on the officer's DOB feed immediately</div></div>
+        </div>
+        <textarea class="compose-ta" id="compose-ta" rows="2" placeholder="e.g. DPD delivery arriving at 14:30 — not scheduled, please allow access to loading bay..."></textarea>
+        <div class="compose-foot">
+          <span class="compose-hint">Officer will acknowledge when read</span>
+          <button class="send-btn" onclick="sendMsg()">📨 Send to Officer</button>
+        </div>
+      </div>
+      <div id="msg-list"></div>
+    </div>
+
+    <!-- FULL LOG -->
+    <div class="page" id="page-log">
+      <div class="readonly-note">🔒 Filtered view — Incidents, Health &amp; Safety and Maintenance entries only. Operational entries are not shown.</div>
+      <div class="chips" id="log-chips"></div>
+      <div id="log-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const CLIENTS = {
+  c1:{id:'c1',name:'Brindleyplace BID',ini:'BP',siteId:'s1',siteName:'Brindleyplace',city:'Birmingham',officer:'Harris, J.',sia:'SIA-7741'},
+  c2:{id:'c2',name:'Merry Hill Management',ini:'MH',siteId:'s2',siteName:'Merry Hill Centre',city:'Dudley',officer:'Dawson, T.',sia:'SIA-3382'},
+  c3:{id:'c3',name:'City of Wolverhampton',ini:'WC',siteId:'s3',siteName:'Wolverhampton Civic',city:'Wolverhampton',officer:'Singh, R.',sia:'SIA-9104'},
+  c4:{id:'c4',name:'Walsall BID',ini:'WB',siteId:'s4',siteName:'Walsall Town Centre',city:'Walsall',officer:'Clarke, M.',sia:'SIA-6657'},
+  c5:{id:'c5',name:'Coventry City Council',ini:'CC',siteId:'s5',siteName:'Coventry Ring Road',city:'Coventry',officer:'Okafor, B.',sia:'SIA-2291'},
+};
+
+const TC = {
+  health_safety:{label:'Health and Safety',icon:'⛑',color:'#d97706',bg:'#fffbeb',bd:'#fde68a'},
+  maintenance:  {label:'Maintenance',icon:'🔧',color:'#64748b',bg:'#f8fafc',bd:'#e2e8f0'},
+  incident:     {label:'Incident',icon:'⚠️',color:'#dc2626',bg:'#fef2f2',bd:'#fecaca'},
+};
+const SC = {
+  open:       {label:'Open',color:'#dc2626',bg:'#fef2f2',bd:'#fecaca'},
+  in_progress:{label:'In Progress',color:'#d97706',bg:'#fffbeb',bd:'#fde68a'},
+  resolved:   {label:'Resolved',color:'#16a34a',bg:'#f0fdf4',bd:'#bbf7d0'},
+};
+
+window._S = window._S || {ap:{},msg:{}};
+let C = null, apF = 'all', logF = 'all';
+
+const fmt = d => d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+const fmtFull = d => d.toLocaleDateString('en-GB',{day:'numeric',month:'short'}) + ' ' + fmt(d);
+
+function seedAP(siteId, officer){
+  if(window._S.ap[siteId]) return;
+  window._S.ap[siteId] = [
+    {id:'a1',type:'health_safety',siteId,officer,
+     title:'Wet floor — main entrance following cleaning',
+     time:new Date(Date.now()-95*60000),status:'resolved',resolvedAt:new Date(Date.now()-60*60000),
+     thread:[
+       {from:'officer',text:'Wet floor at main entrance. Cone placed. Action required from facilities team.',time:new Date(Date.now()-95*60000)},
+       {from:'client', text:'Noted — facilities have been contacted, on their way.',time:new Date(Date.now()-80*60000)},
+       {from:'officer',text:'Floor now dry. Cone removed. Issue resolved.',time:new Date(Date.now()-60*60000),resolution:true},
+     ]},
+    {id:'a2',type:'maintenance',siteId,officer,
+     title:'Rear service door lock faulty — door not closing fully',
+     time:new Date(Date.now()-55*60000),status:'in_progress',resolvedAt:null,
+     thread:[
+       {from:'officer',text:'Rear service entrance lock faulty. Door not closing flush — security risk. Please arrange repair.',time:new Date(Date.now()-55*60000)},
+       {from:'client', text:'Thanks. Maintenance team called out — expected on site within 2 hours.',time:new Date(Date.now()-40*60000)},
+     ]},
+    {id:'a3',type:'health_safety',siteId,officer,
+     title:'Level 2 car park — two light fittings out, bays 14-16',
+     time:new Date(Date.now()-20*60000),status:'open',resolvedAt:null,
+     thread:[
+       {from:'officer',text:'Two fluorescent lights out on level 2, bays 14-16. Creating a dark spot — safety hazard after dark.',time:new Date(Date.now()-20*60000)},
+     ]},
+  ];
+  window._S.msg[siteId] = [];
+}
+
+const getAPs  = () => window._S.ap[C.siteId] || [];
+const getMsgs = () => window._S.msg[C.siteId] || [];
+
+// CLOCK
+setInterval(() => {
+  const el = document.getElementById('nav-clock');
+  if(el) el.textContent = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}, 1000);
+
+// LOGIN
+function login(cid){
+  C = CLIENTS[cid];
+  seedAP(C.siteId, C.officer);
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('app').classList.add('on');
+  document.getElementById('nav-av').textContent = C.ini;
+  document.getElementById('nav-uname').textContent = C.name;
+  document.getElementById('sb-name').textContent = 'Site: ' + C.siteName + ', ' + C.city;
+  document.getElementById('sb-detail').textContent = 'Duty Officer: ' + C.officer + ' ' + C.sia;
+  renderAll();
+}
+function signOut(){
+  C = null;
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('app').classList.remove('on');
+}
+
+// TABS
+function showTab(name, el){
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('page-'+name).classList.add('active');
+  renderAll();
+}
+
+function renderAll(){
+  if(!C) return;
+  renderAP(); renderMsgs(); renderLog(); renderBadges();
+}
+
+function renderBadges(){
+  const open = getAPs().filter(a => a.status !== 'resolved').length;
+  document.getElementById('tb-ap').textContent = open || '';
+  document.getElementById('tb-msg').textContent = getMsgs().length || '';
+}
+
+// ══ ACTION POINTS ══
+function renderAP(){
+  const aps = getAPs();
+  const cnts = {open:0,in_progress:0,resolved:0};
+  aps.forEach(a => cnts[a.status]++);
+
+  document.getElementById('ap-stats').innerHTML = [
+    {k:'open',label:'Open',icon:'🔴'},
+    {k:'in_progress',label:'In Progress',icon:'🟡'},
+    {k:'resolved',label:'Resolved',icon:'🟢'},
+  ].map(s => {
+    const sc = SC[s.k];
+    return `<div class="stat-card" style="border-top-color:${sc.color};" onclick="setApF('${s.k}')">
+      <div class="stat-num" style="color:${sc.color};">${cnts[s.k]}</div>
+      <div class="stat-label">${s.icon} ${s.label}</div>
+    </div>`;
+  }).join('');
+
+  const chips = [{id:'all',l:'All'},{id:'open',l:'🔴 Open'},{id:'in_progress',l:'🟡 In Progress'},{id:'resolved',l:'🟢 Resolved'},{id:'health_safety',l:'⛑ Health and Safety'},{id:'maintenance',l:'🔧 Maintenance'}];
+  document.getElementById('ap-chips').innerHTML = chips.map(c =>
+    `<span class="chip ${c.id===apF?'on':''}" onclick="setApF('${c.id}')">${c.l}</span>`
+  ).join('');
+
+  let filtered = [...aps].sort((a,b) => {
+    const ord = {open:0,in_progress:1,resolved:2};
+    return ord[a.status]-ord[b.status] || b.time-a.time;
+  });
+  const statuses = ['open','in_progress','resolved'];
+  if(statuses.includes(apF)) filtered = filtered.filter(a => a.status === apF);
+  else if(apF !== 'all') filtered = filtered.filter(a => a.type === apF);
+
+  if(!filtered.length){
+    document.getElementById('ap-list').innerHTML = `<div class="empty"><div class="empty-icon">✅</div><div class="empty-title">Nothing here</div><div class="empty-sub">No action points in this category</div></div>`;
+    return;
+  }
+  document.getElementById('ap-list').innerHTML = filtered.map(ap => apCard(ap)).join('');
+}
+
+function apCard(ap){
+  const tc = TC[ap.type] || TC.maintenance;
+  const sc = SC[ap.status];
+  const officerIni = ap.officer.split(',')[0].slice(0,2).toUpperCase();
+
+  const threadHtml = ap.thread.map(t => {
+    const isClient = t.from === 'client';
+    const isRes = t.resolution;
+    const avatarBg = isRes ? '#16a34a' : isClient ? '#7c3aed' : '#0f2744';
+    const avatarTxt = isClient ? C.ini : officerIni;
+    const bubbleStyle = isRes
+      ? 'background:var(--green-bg);border-color:var(--green-bd);'
+      : isClient
+        ? 'background:var(--purple-bg);border-color:var(--purple-bd);'
+        : 'background:#f8fafc;border-color:var(--border);';
+    const fromColor = isRes ? 'color:var(--green);' : isClient ? 'color:var(--purple);' : 'color:var(--text2);';
+    const fromLabel = isRes ? 'Resolved by ' + t.from_officer||ap.officer : isClient ? C.name : ap.officer;
+    return `<div class="t-item">
+      <div class="t-av" style="background:${avatarBg};">${avatarTxt}</div>
+      <div class="t-bubble" style="${bubbleStyle}">
+        <div class="t-from" style="${fromColor}">${isRes ? '✓ ' : ''}${fromLabel}</div>
+        <div class="t-text">${t.text}</div>
+        <div class="t-time">${fmtFull(t.time)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const commentBox = ap.status !== 'resolved' ? `
+    <div class="comment-box">
+      <textarea class="comment-ta" id="ct-${ap.id}" rows="2" placeholder="Add a comment — e.g. Noted, maintenance contacted and on their way..."></textarea>
+      <div class="comment-foot"><button class="comment-btn" onclick="addComment('${ap.id}')">💬 Add Comment</button></div>
+    </div>` : '';
+
+  const resolvedBar = ap.status === 'resolved' ? `
+    <div class="resolved-bar">
+      <span style="font-size:16px;">✅</span>
+      <span class="resolved-bar-text">Marked as resolved by ${ap.officer} — ${fmtFull(ap.resolvedAt)}</span>
+    </div>` : '';
+
+  const statusIcon = ap.status === 'resolved' ? '✓ ' : ap.status === 'in_progress' ? '↻ ' : '● ';
+
+  return `<div class="ap-card">
+    <div class="ap-head" style="border-left-color:${tc.color};">
+      <span class="ap-icon">${tc.icon}</span>
+      <div class="ap-head-body">
+        <div class="ap-type-label" style="color:${tc.color};">${tc.label}</div>
+        <div class="ap-title">${ap.title}</div>
+        <div class="ap-meta">👤 ${ap.officer} &nbsp;·&nbsp; 🕐 ${fmtFull(ap.time)}</div>
+      </div>
+      <span class="status-pill" style="color:${sc.color};background:${sc.bg};border-color:${sc.bd};">${statusIcon}${sc.label}</span>
+    </div>
+    <div class="thread">${threadHtml}</div>
+    ${commentBox}
+    ${resolvedBar}
+  </div>`;
+}
+
+function setApF(f){ apF = f; renderAP(); }
+
+function addComment(apId){
+  const ta = document.getElementById('ct-'+apId);
+  const text = ta.value.trim();
+  if(!text) return;
+  const ap = getAPs().find(a => a.id === apId);
+  if(!ap) return;
+  ap.thread.push({from:'client', text, time:new Date()});
+  ap.status = 'in_progress';
+  ta.value = '';
+  // Flash
+  const fl = document.getElementById('ap-flash');
+  fl.innerHTML = `<div class="flash"><span style="font-size:16px;">✓</span><span style="font-size:13px;font-weight:600;color:var(--green);">Comment sent — officer will be notified</span></div>`;
+  setTimeout(() => fl.innerHTML = '', 3500);
+  renderAP(); renderBadges();
+  // Demo: officer resolves after a few seconds
+  if(!ap._scheduled){
+    ap._scheduled = true;
+    setTimeout(() => {
+      ap.status = 'resolved';
+      ap.resolvedAt = new Date();
+      ap.thread.push({from:'officer', text:'Issue attended to and resolved. Thanks for the update.', time:new Date(), resolution:true});
+      renderAP(); renderBadges();
+    }, 5000 + Math.random()*4000);
+  }
+}
+
+// ══ MESSAGES ══
+function sendMsg(){
+  const text = document.getElementById('compose-ta').value.trim();
+  if(!text) return;
+  const msg = {id:'m'+Date.now(), text, name:C.name, time:new Date(), acked:false, ackedAt:null, officer:C.officer};
+  getMsgs().unshift(msg);
+  document.getElementById('compose-ta').value = '';
+  renderMsgs(); renderBadges();
+  setTimeout(() => { msg.acked = true; msg.ackedAt = new Date(); renderMsgs(); }, 4000+Math.random()*3000);
+}
+
+function renderMsgs(){
+  const msgs = getMsgs();
+  if(!msgs.length){
+    document.getElementById('msg-list').innerHTML = `<div class="empty"><div class="empty-icon">💬</div><div class="empty-title">No messages yet</div><div class="empty-sub">Use the box above to send a note to your duty officer</div></div>`;
+    return;
+  }
+  document.getElementById('msg-list').innerHTML = msgs.map(m => `
+    <div class="msg-card">
+      <div class="msg-head"><div class="msg-from">💬 ${m.name} → ${m.officer}</div><div class="msg-time">${fmtFull(m.time)}</div></div>
+      <div class="msg-body">${m.text}</div>
+      <div class="msg-ack">${m.acked
+        ? `<span style="color:var(--green);font-weight:600;">✓ Acknowledged by ${m.officer} at ${fmt(m.ackedAt)}</span>`
+        : `<span class="ack-spin"></span><span style="color:var(--muted);font-size:12px;">Waiting for acknowledgement...</span>`}
+      </div>
+    </div>`).join('');
+}
+
+// ══ FULL LOG ══
+function renderLog(){
+  if(!C) return;
+  const DEMO = [
+    {type:'incident',    notes:'Suspicious person loitering near car park entrance. Moved on when approached.',time:new Date(Date.now()-120*60000)},
+    {type:'health_safety',notes:'Wet floor — main entrance following cleaning. Cone placed.',time:new Date(Date.now()-95*60000)},
+    {type:'maintenance', notes:'Rear service door lock faulty — not closing fully.',time:new Date(Date.now()-55*60000)},
+    {type:'incident',    notes:'Shoplifter detained — police called, arrived 14 mins.',time:new Date(Date.now()-45*60000)},
+    {type:'health_safety',notes:'Level 2 car park — two light fittings out, bays 14-16.',time:new Date(Date.now()-20*60000)},
+  ].map(e => ({...e, officer:C.officer}));
+
+  const chips = [{id:'all',l:'All'},{id:'incident',l:'Incidents'},{id:'health_safety',l:'Health and Safety'},{id:'maintenance',l:'Maintenance'}];
+  document.getElementById('log-chips').innerHTML = chips.map(c =>
+    `<span class="chip ${c.id===logF?'on':''}" onclick="setLogF('${c.id}')">${c.l}</span>`
+  ).join('');
+
+  const filtered = logF === 'all' ? DEMO : DEMO.filter(e => e.type === logF);
+  document.getElementById('log-list').innerHTML = filtered.map(e => {
+    const tc = TC[e.type] || TC.incident;
+    return `<div class="log-entry" style="border-left-color:${tc.color};">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div style="font-size:13px;font-weight:600;color:${tc.color};">${tc.icon} ${tc.label}</div>
+        <span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--navy);">${fmt(e.time)}</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">👤 ${e.officer}</div>
+      <div style="font-size:12px;color:var(--text2);font-style:italic;">${e.notes}</div>
+    </div>`;
+  }).join('');
+}
+function setLogF(f){ logF = f; renderLog(); }
+
+// INIT
+document.getElementById('nav-clock').textContent = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+</script>
+
+<script>
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('/sw.js').catch(()=>{}); }
+</script>
+</body>
+</html>

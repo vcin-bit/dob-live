@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>DOB·LIVE — Officer View</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy:     #0f2744;
+  --navy2:    #1e3a5f;
+  --navy3:    #2d5282;
+  --bg:       #f0f4f8;
+  --white:    #ffffff;
+  --border:   #e2e8f0;
+  --border2:  #cbd5e1;
+  --text:     #0f172a;
+  --text2:    #334155;
+  --muted:    #64748b;
+  --green:    #16a34a;
+  --red:      #dc2626;
+  --blue:     #1d4ed8;
+  --amber:    #b45309;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overscroll-behavior:none;}
+button,select,textarea{font-family:inherit;}
+::-webkit-scrollbar{width:3px;} ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:2px;}
+
+/* ── TOP NAV ── */
+.topnav{
+  background:var(--navy);
+  color:#fff;
+  padding:0 16px;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 12px rgba(15,39,68,.25);
+}
+.topnav-inner{
+  max-width:700px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:52px;
+}
+.brand{display:flex;align-items:center;gap:9px;}
+.brand-icon{width:28px;height:28px;background:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;color:var(--navy);flex-shrink:0;}
+.brand-name{font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;letter-spacing:.01em;}
+.brand-sub{font-size:9px;color:#93c5fd;letter-spacing:.1em;margin-top:1px;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.nav-clock{font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;letter-spacing:.04em;color:#fff;}
+.nav-clock-date{font-size:9px;color:#93c5fd;text-align:right;margin-top:1px;}
+.nav-avatar{width:30px;height:30px;border-radius:50%;background:var(--navy2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;border:1px solid #ffffff22;}
+
+/* ── SITE BANNER ── */
+.site-banner{
+  background:var(--navy2);
+  padding:10px 16px;
+  border-bottom:1px solid #1a3050;
+}
+.site-banner-inner{
+  max-width:700px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.site-name-row{display:flex;align-items:center;gap:7px;}
+.site-pin{font-size:14px;}
+.site-name{font-size:13px;font-weight:700;color:#fff;}
+.site-city{font-size:11px;color:#93c5fd;margin-top:1px;}
+.shift-pill{
+  display:flex;align-items:center;gap:5px;
+  background:#ffffff12;border:1px solid #ffffff22;
+  border-radius:20px;padding:4px 10px;
+}
+.shift-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.shift-text{font-size:11px;color:#d1fae5;font-weight:600;}
+
+/* ── MAIN LAYOUT ── */
+.main{max-width:700px;margin:0 auto;padding:16px 16px 120px;}
+
+/* ── HERO BUTTON ── */
+.hero-btn-wrap{
+  margin-bottom:20px;
+}
+.hero-btn{
+  width:100%;
+  background:var(--navy);
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  padding:0;
+  cursor:pointer;
+  display:flex;align-items:center;
+  overflow:hidden;
+  box-shadow:0 4px 20px rgba(15,39,68,.25);
+  transition:transform .15s, box-shadow .15s;
+  -webkit-user-select:none;user-select:none;
+}
+.hero-btn:active{transform:scale(.98);box-shadow:0 2px 10px rgba(15,39,68,.2);}
+.hero-btn-left{
+  flex:1;
+  padding:20px 20px;
+  display:flex;align-items:center;gap:14px;
+}
+.hero-plus{
+  width:48px;height:48px;border-radius:10px;
+  background:#ffffff18;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;font-weight:300;color:#fff;flex-shrink:0;
+  line-height:1;
+}
+.hero-text-wrap{}
+.hero-title{font-family:'DM Sans',sans-serif;font-weight:600;font-size:18px;font-weight:600;letter-spacing:-.01em;line-height:1;}
+.hero-sub{font-size:11px;color:#93c5fd;margin-top:3px;font-weight:500;}
+.hero-btn-right{
+  padding:20px 18px;
+  border-left:1px solid #ffffff18;
+  display:flex;align-items:center;
+  font-size:22px;color:#ffffff66;
+  flex-shrink:0;
+}
+
+/* ── QUICK ACTIONS ── */
+.quick-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-bottom:20px;
+}
+.quick-btn{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 6px 10px;
+  cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  transition:all .15s;
+  box-shadow:0 1px 3px rgba(0,0,0,.05);
+}
+.quick-btn:active{transform:scale(.96);}
+.quick-icon{font-size:18px;line-height:1;}
+.quick-label{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:.01em;text-align:center;line-height:1.2;}
+
+/* ── DUTY CARD ── */
+.duty-card{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px 16px;
+  margin-bottom:20px;
+  box-shadow:0 1px 3px rgba(0,0,0,.05);
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+}
+.duty-item{padding:0 12px;border-right:1px solid var(--border);}
+.duty-item:first-child{padding-left:0;}
+.duty-item:last-child{border-right:none;}
+.duty-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px;}
+.duty-val{font-family:'DM Sans',sans-serif;font-weight:700;font-size:18px;color:var(--navy);line-height:1;}
+.duty-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+
+/* ── LOG SECTION ── */
+.section-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;
+}
+.section-title{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--navy);letter-spacing:.01em;}
+.section-count{font-size:11px;color:var(--muted);font-weight:500;}
+
+/* ── LOG ENTRIES (card style for mobile) ── */
+.log-list{display:flex;flex-direction:column;gap:8px;}
+.log-card{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 14px;
+  border-left:4px solid;
+  box-shadow:0 1px 3px rgba(0,0,0,.04);
+  transition:background .15s;
+  animation:cardIn .3s ease;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.log-card.flash{animation:cardFlash 3s ease forwards;}
+@keyframes cardFlash{0%{background:#fef9c3;}70%{background:#fef9c3;}100%{background:#fff;}}
+.log-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;}
+.log-type-row{display:flex;align-items:center;gap:7px;}
+.log-type-icon{font-size:14px;}
+.log-type-label{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:.01em;}
+.log-time{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--navy);letter-spacing:.01em;}
+.log-meta{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--muted);}
+.log-sep{color:var(--border);}
+.log-note{font-size:12px;color:var(--muted);font-style:italic;margin-top:5px;padding-top:5px;border-top:1px solid #f8fafc;}
+.badge-new{display:inline-block;background:#fef9c3;color:#713f12;border:1px solid #fde047;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;margin-left:6px;vertical-align:middle;}
+
+/* ── BOTTOM SHEET OVERLAY ── */
+.overlay{
+  position:fixed;inset:0;
+  background:rgba(15,39,68,.5);
+  backdrop-filter:blur(2px);
+  z-index:200;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s;
+}
+.overlay.open{opacity:1;pointer-events:all;}
+
+/* ── BOTTOM SHEET ── */
+.sheet{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--white);
+  border-radius:20px 20px 0 0;
+  z-index:201;
+  transform:translateY(110%);
+  transition:transform .32s cubic-bezier(.4,0,.2,1);
+  max-height:92vh;
+  overflow-y:auto;
+  box-shadow:0 -8px 40px rgba(15,39,68,.2);
+  max-width:700px;
+  margin:0 auto;
+}
+.sheet.open{transform:translateY(0);}
+.sheet-handle{
+  width:36px;height:4px;
+  background:var(--border2);border-radius:2px;
+  margin:12px auto 0;
+}
+.sheet-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px 12px;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:var(--white);z-index:1;
+}
+.sheet-title{font-family:'DM Sans',sans-serif;font-size:17px;font-weight:700;color:var(--navy);}
+.sheet-time{font-size:12px;color:var(--muted);background:var(--bg);padding:4px 10px;border-radius:4px;border:1px solid var(--border);}
+.sheet-body{padding:16px 20px 24px;}
+
+/* ── ENTRY TYPE GRID ── */
+.type-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin-bottom:18px;
+}
+.type-tile{
+  border:2px solid var(--border);
+  border-radius:10px;
+  padding:12px 14px;
+  cursor:pointer;
+  display:flex;align-items:center;gap:10px;
+  transition:all .15s;
+  background:var(--white);
+}
+.type-tile:active{transform:scale(.97);}
+.type-tile.selected{border-width:2px;}
+.type-tile-icon{font-size:20px;flex-shrink:0;}
+.type-tile-label{font-size:13px;font-weight:700;color:var(--text2);line-height:1.2;}
+
+/* ── FORM FIELDS ── */
+.field-label{display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;}
+.field-select,.field-textarea{
+  width:100%;border:1px solid var(--border2);border-radius:8px;
+  padding:11px 13px;font-size:14px;color:var(--text);
+  background:var(--white);outline:none;
+  transition:border .18s,box-shadow .18s;
+  -webkit-appearance:none;appearance:none;
+}
+.field-select:focus,.field-textarea:focus{
+  border-color:var(--navy);
+  box-shadow:0 0 0 3px rgba(15,39,68,.1);
+}
+.field-textarea{resize:none;line-height:1.5;}
+.field-row{margin-bottom:16px;}
+
+/* ── SUBMIT BUTTON ── */
+.submit-btn{
+  width:100%;
+  background:var(--navy);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:16px;
+  font-family:'DM Sans',sans-serif;
+  font-size:17px;font-weight:700;
+  letter-spacing:.02em;
+  cursor:pointer;
+  transition:all .15s;
+  margin-top:8px;
+}
+.submit-btn:active{transform:scale(.98);background:var(--navy2);}
+.cancel-link{
+  display:block;text-align:center;
+  margin-top:12px;font-size:13px;
+  color:var(--muted);cursor:pointer;font-weight:600;
+  padding:8px;
+}
+
+/* ── DESKTOP ENHANCEMENTS ── */
+@media(min-width:600px){
+  .main{padding:24px 16px 40px;}
+  .quick-row{grid-template-columns:repeat(8,1fr);}
+  .hero-btn{border-radius:14px;}
+  .hero-title{font-size:20px;font-weight:600;}
+  .hero-plus{width:52px;height:52px;font-size:30px;}
+  .type-grid{grid-template-columns:repeat(4,1fr);}
+  .sheet{
+    position:fixed;
+    top:50%;left:50%;
+    transform:translate(-50%, 120vh);
+    border-radius:16px;
+    width:560px;
+    max-height:85vh;
+    box-shadow:0 20px 60px rgba(15,39,68,.25);
+    bottom:auto;
+  }
+  .sheet.open{transform:translate(-50%,-50%);}
+  .overlay{display:block;}
+}
+
+/* ── SUCCESS STATE ── */
+.sheet-success{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:48px 24px;
+  text-align:center;
+}
+.sheet-success.show{display:flex;}
+.success-icon{
+  width:64px;height:64px;border-radius:50%;
+  background:#f0fdf4;border:2px solid #bbf7d0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;margin-bottom:16px;
+  animation:popIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn{from{transform:scale(.6);opacity:0;}to{transform:scale(1);opacity:1;}}
+.success-title{font-size:16px;font-weight:600;color:var(--navy);margin-bottom:6px;}
+.success-sub{font-size:13px;color:var(--muted);}
+
+/* ── PHOTO UPLOAD ── */
+.photo-section{margin-bottom:16px;}
+.photo-add-row{display:flex;gap:8px;margin-top:8px;}
+.photo-btn{
+  flex:1;border:1.5px dashed var(--border2);border-radius:8px;
+  padding:13px 10px;background:var(--bg);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  transition:all .15s;color:var(--muted);font-size:12px;font-weight:500;
+}
+.photo-btn:active{border-color:var(--navy);background:#f0f4f8;}
+.photo-btn-icon{font-size:22px;}
+.photo-previews{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.photo-thumb{
+  position:relative;width:72px;height:72px;border-radius:8px;
+  overflow:hidden;border:1px solid var(--border);flex-shrink:0;
+}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;}
+.photo-remove{
+  position:absolute;top:2px;right:2px;
+  width:18px;height:18px;border-radius:50%;
+  background:rgba(0,0,0,.6);color:#fff;
+  border:none;cursor:pointer;font-size:10px;
+  display:flex;align-items:center;justify-content:center;
+  line-height:1;
+}
+input[type=file]{display:none;}
+
+/* ── LOCATION ── */
+.location-section{margin-bottom:16px;}
+.loc-btn{
+  width:100%;border:1.5px solid var(--border2);border-radius:8px;
+  padding:11px 14px;background:var(--white);cursor:pointer;
+  display:flex;align-items:center;gap:10px;
+  transition:all .15s;font-size:13px;font-weight:500;color:var(--text2);
+}
+.loc-btn:active{border-color:var(--navy);}
+.loc-btn-icon{font-size:18px;flex-shrink:0;}
+.loc-btn-text{flex:1;text-align:left;}
+.loc-btn-text small{display:block;font-size:10px;color:var(--muted);margin-top:1px;}
+.loc-result{
+  margin-top:8px;border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;display:none;
+}
+.loc-result.show{display:block;}
+.loc-gps{
+  padding:10px 14px;background:var(--bg);
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.loc-gps-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+.loc-gps-val{font-family:'DM Mono',monospace;font-size:12px;color:var(--navy);font-weight:500;}
+.loc-w3w{
+  padding:10px 14px;background:#fff;
+  display:flex;align-items:center;gap:8px;
+}
+.w3w-logo{font-size:14px;font-weight:700;color:#e11d48;letter-spacing:-.02em;flex-shrink:0;}
+.w3w-addr{font-size:13px;font-weight:600;color:#e11d48;flex:1;}
+.w3w-addr.loading{color:var(--muted);font-weight:400;font-style:italic;}
+.loc-maps-link{
+  display:block;padding:8px 14px;
+  background:#eff6ff;border-top:1px solid var(--border);
+  font-size:12px;color:var(--blue);font-weight:500;text-align:center;
+  cursor:pointer;text-decoration:none;
+}
+.loc-clear{
+  background:none;border:none;color:var(--muted);cursor:pointer;
+  font-size:11px;font-weight:500;margin-top:6px;display:block;padding:2px 0;
+}
+.loc-spinner{
+  display:inline-block;width:14px;height:14px;
+  border:2px solid var(--border2);border-top-color:var(--navy);
+  border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── LOG CARD MEDIA ── */
+.log-photos{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.log-photo-thumb{width:56px;height:56px;border-radius:6px;object-fit:cover;border:1px solid var(--border);}
+.log-location{
+  display:flex;align-items:center;gap:6px;
+  margin-top:6px;padding:6px 10px;
+  background:var(--bg);border-radius:6px;border:1px solid var(--border);
+}
+.log-location-icon{font-size:13px;flex-shrink:0;}
+.log-location-text{font-size:11px;color:var(--muted);flex:1;line-height:1.4;}
+.log-location-w3w{font-weight:600;color:#e11d48;}
+
+
+/* ══ PATROL TRACKING SCREEN ══ */
+#patrol-screen{
+  display:none;
+  position:fixed;inset:0;z-index:300;
+  background:var(--navy);
+  flex-direction:column;
+}
+#patrol-screen.active{display:flex;}
+
+.patrol-header{
+  background:var(--navy);
+  padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.patrol-header-left{display:flex;align-items:center;gap:10px;}
+.patrol-pulse{width:10px;height:10px;border-radius:50%;background:#4ade80;flex-shrink:0;animation:pulse 1.5s infinite;}
+.patrol-header-title{font-size:14px;font-weight:600;color:#fff;letter-spacing:.01em;}
+.patrol-header-sub{font-size:11px;color:#93c5fd;margin-top:1px;}
+.patrol-end-btn{
+  background:#dc2626;color:#fff;border:none;
+  padding:8px 16px;border-radius:6px;
+  font-size:13px;font-weight:600;cursor:pointer;
+  transition:all .15s;flex-shrink:0;
+}
+.patrol-end-btn:active{background:#b91c1c;transform:scale(.97);}
+
+/* Stats bar */
+.patrol-stats{
+  background:var(--navy2);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-bottom:1px solid #1a3050;
+  flex-shrink:0;
+}
+.patrol-stat{
+  padding:10px 8px;
+  text-align:center;
+  border-right:1px solid #1a3050;
+}
+.patrol-stat:last-child{border-right:none;}
+.patrol-stat-val{
+  font-size:20px;font-weight:700;color:#fff;
+  letter-spacing:-.01em;line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.patrol-stat-label{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-top:3px;}
+
+/* Map */
+#patrol-map{flex:1;width:100%;height:100%;min-height:200px;}
+
+/* Bottom action bar */
+.patrol-actions{
+  background:var(--navy2);
+  padding:12px 16px;
+  display:flex;gap:8px;
+  border-top:1px solid #1a3050;
+  flex-shrink:0;
+}
+.patrol-action-btn{
+  flex:1;
+  border:none;border-radius:8px;
+  padding:11px 8px;
+  font-size:12px;font-weight:600;
+  cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  transition:all .15s;
+}
+.patrol-action-btn:active{transform:scale(.96);}
+.patrol-action-icon{font-size:18px;}
+.patrol-action-btn.red{background:#7f1d1d;color:#fca5a5;}
+.patrol-action-btn.blue{background:#1e3a5f;color:#93c5fd;}
+.patrol-action-btn.amber{background:#451a03;color:#fcd34d;}
+.patrol-action-btn.green{background:#14532d;color:#86efac;}
+
+/* Accuracy indicator */
+.gps-accuracy{
+  position:absolute;bottom:170px;right:12px;z-index:1000;
+  background:rgba(15,39,68,.85);
+  backdrop-filter:blur(4px);
+  padding:5px 10px;border-radius:4px;
+  font-size:11px;color:#93c5fd;
+  border:1px solid #1e3a5f;
+}
+
+/* W3W badge on map */
+.map-w3w-badge{
+  position:absolute;bottom:170px;left:12px;z-index:1000;
+  background:rgba(15,39,68,.85);
+  backdrop-filter:blur(4px);
+  padding:5px 10px;border-radius:4px;
+  font-size:11px;font-weight:600;color:#e11d48;
+  border:1px solid #1e3a5f;
+  display:none;
+}
+.map-w3w-badge.show{display:block;}
+
+/* Incident quick-log modal over patrol */
+#patrol-incident-modal{
+  display:none;
+  position:fixed;inset:0;z-index:400;
+  background:rgba(15,39,68,.7);
+  backdrop-filter:blur(3px);
+  align-items:flex-end;
+  justify-content:center;
+}
+#patrol-incident-modal.open{display:flex;}
+.patrol-modal-box{
+  background:#fff;
+  border-radius:16px 16px 0 0;
+  padding:20px 20px 32px;
+  width:100%;max-width:560px;
+}
+.patrol-modal-title{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:14px;}
+.patrol-cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.patrol-cat-btn{
+  border:1px solid var(--border2);border-radius:8px;
+  padding:10px 12px;background:#fff;cursor:pointer;
+  font-size:13px;font-weight:500;color:var(--text2);
+  text-align:left;transition:all .15s;
+}
+.patrol-cat-btn:active{background:#fffbeb;border-color:#fde068;}
+.patrol-modal-cancel{display:block;text-align:center;font-size:13px;color:var(--muted);cursor:pointer;font-weight:500;margin-top:4px;padding:8px;}
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<meta name="theme-color" content="#0f2744"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="DOB·LIVE"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+</head>
+<body>
+
+<!-- TOP NAV -->
+
+<input type="file" id="camera-input" accept="image/*" capture="environment" multiple/>
+<input type="file" id="gallery-input" accept="image/*" multiple/>
+
+<div class="topnav">
+  <div class="topnav-inner">
+    <div class="brand">
+      <div class="brand-icon">D</div>
+      <div>
+        <div class="brand-name">DOB·LIVE</div>
+        <div class="brand-sub">DIGITAL OCCURRENCE BOOK</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div>
+        <div class="nav-clock" id="nav-clock">--:--:--</div>
+        <div class="nav-clock-date" id="nav-date"></div>
+      </div>
+      <div class="nav-avatar">JH</div>
+    </div>
+  </div>
+</div>
+
+<!-- SITE BANNER -->
+<div class="site-banner">
+  <div class="site-banner-inner">
+    <div>
+      <div class="site-name-row">
+        <span class="site-pin">📍</span>
+        <span class="site-name">Brindleyplace</span>
+      </div>
+      <div class="site-city">Birmingham · Harris, J. · SIA-7741</div>
+    </div>
+    <div class="shift-pill">
+      <span class="shift-dot"></span>
+      <span class="shift-text">On Duty · 07:00–19:00</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HERO NEW ENTRY BUTTON -->
+  <div class="hero-btn-wrap">
+    <button class="hero-btn" onclick="openSheet()">
+      <div class="hero-btn-left">
+        <div class="hero-plus">+</div>
+        <div class="hero-text-wrap">
+          <div class="hero-title">New Entry</div>
+          <div class="hero-sub">Log an occurrence, patrol or incident</div>
+        </div>
+      </div>
+      <div class="hero-btn-right">›</div>
+    </button>
+  </div>
+
+  <!-- QUICK LOG BUTTONS -->
+  <div class="quick-row" id="quick-row"></div>
+
+  <!-- DUTY STATS -->
+  <div class="duty-card">
+    <div class="duty-item">
+      <div class="duty-label">Entries</div>
+      <div class="duty-val" id="stat-entries">0</div>
+      <div class="duty-sub">today</div>
+    </div>
+    <div class="duty-item">
+      <div class="duty-label">Incidents</div>
+      <div class="duty-val" id="stat-incidents" style="color:var(--red);">0</div>
+      <div class="duty-sub">flagged</div>
+    </div>
+    <div class="duty-item">
+      <div class="duty-label">Patrols</div>
+      <div class="duty-val" id="stat-patrols" style="color:var(--blue);">0</div>
+      <div class="duty-sub">completed</div>
+    </div>
+  </div>
+
+  <!-- LOG FEED -->
+  <div class="section-header">
+    <span class="section-title">Today's Log</span>
+    <span class="section-count" id="log-count">0 entries</span>
+  </div>
+  <div class="log-list" id="log-list">
+    <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:32px;text-align:center;">
+      <div style="font-size:32px;margin-bottom:8px;">📋</div>
+      <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px;">No entries yet</div>
+      <div style="font-size:12px;color:var(--muted);">Tap the button above to log your first occurrence</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeSheet()"></div>
+
+<!-- BOTTOM SHEET / MODAL -->
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <span class="sheet-title">New Entry</span>
+    <span class="sheet-time" id="sheet-time"></span>
+  </div>
+  <div class="sheet-body" id="sheet-body">
+    <div class="sheet-success" id="sheet-success">
+      <div class="success-icon">✓</div>
+      <div class="success-title" id="success-title">Entry Logged</div>
+      <div class="success-sub" id="success-sub"></div>
+    </div>
+    <div id="sheet-form">
+
+    <!-- ENTRY TYPE GRID -->
+    <div class="field-row">
+      <label class="field-label">Entry Type</label>
+      <div class="type-grid" id="type-grid"></div>
+    </div>
+
+    <!-- INCIDENT CATEGORY (shown only for incident type) -->
+    <div class="field-row" id="cat-row" style="display:none;">
+      <label class="field-label">Incident Category</label>
+      <select class="field-select" id="inc-cat">
+        <option value="">— Select category —</option>
+        <option>Theft / Shoplifting</option>
+        <option>Trespass</option>
+        <option>Antisocial Behaviour</option>
+        <option>Assault</option>
+        <option>Suspicious Person</option>
+        <option>Suspicious Vehicle</option>
+        <option>Drug-Related</option>
+        <option>Damage to Property</option>
+        <option>Medical Emergency</option>
+        <option>Fire / Safety</option>
+      </select>
+    </div>
+
+    <!-- NOTES -->
+    <div class="field-row">
+      <label class="field-label">Notes & Detail</label>
+      <textarea class="field-textarea" id="entry-notes" rows="3" placeholder="Describe the occurrence in full..."></textarea>
+    </div>
+
+    <!-- PHOTO UPLOAD -->
+    <div class="photo-section">
+      <label class="field-label">Evidence Photos</label>
+      <div class="photo-add-row">
+        <button type="button" class="photo-btn" onclick="document.getElementById('camera-input').click()">
+          <span class="photo-btn-icon">📷</span>
+          <span>Camera</span>
+        </button>
+        <button type="button" class="photo-btn" onclick="document.getElementById('gallery-input').click()">
+          <span class="photo-btn-icon">🖼️</span>
+          <span>Gallery</span>
+        </button>
+      </div>
+      <div class="photo-previews" id="photo-previews"></div>
+    </div>
+
+    <!-- LOCATION -->
+    <div class="location-section">
+      <label class="field-label">Location</label>
+      <button type="button" class="loc-btn" id="loc-btn" onclick="getLocation()">
+        <span class="loc-btn-icon">📍</span>
+        <div class="loc-btn-text">
+          Tag my location
+          <small>GPS coordinates + What3Words address</small>
+        </div>
+        <span id="loc-btn-arrow">›</span>
+      </button>
+      <div class="loc-result" id="loc-result">
+        <div class="loc-gps">
+          <div>
+            <div class="loc-gps-label">GPS Coordinates</div>
+            <div class="loc-gps-val" id="loc-coords"></div>
+          </div>
+          <button class="loc-clear" onclick="clearLocation()">✕ Remove</button>
+        </div>
+        <div class="loc-w3w">
+          <span class="w3w-logo">///</span>
+          <span class="w3w-addr" id="w3w-addr">looking up address...</span>
+        </div>
+        <a class="loc-maps-link" id="loc-maps-link" target="_blank">Open in Google Maps ↗</a>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="submitEntry()">Submit Entry</button>
+    <span class="cancel-link" onclick="closeSheet()">Cancel</span>
+
+    </div><!-- end sheet-form -->
+  </div>
+</div>
+
+<script>
+const ET = [
+  {id:"on_duty",     label:"On Duty",         icon:"▶", color:"#16a34a", bg:"#f0fdf4", border:"#bbf7d0"},
+  {id:"off_duty",    label:"Off Duty",         icon:"■", color:"#dc2626", bg:"#fef2f2", border:"#fecaca"},
+  {id:"patrol_start",label:"Patrol Start",     icon:"↻", color:"#1d4ed8", bg:"#eff6ff", border:"#bfdbfe"},
+  {id:"patrol_end",  label:"Patrol End",       icon:"✓", color:"#7c3aed", bg:"#f5f3ff", border:"#ddd6fe"},
+  {id:"incident",    label:"Incident",         icon:"!", color:"#b45309", bg:"#fffbeb", border:"#fde68a"},
+  {id:"observation", label:"Observation",      icon:"◎", color:"#0369a1", bg:"#f0f9ff", border:"#bae6fd"},
+  {id:"vehicle",     label:"Vehicle Check",    icon:"⊙", color:"#be185d", bg:"#fdf2f8", border:"#fbcfe8"},
+  {id:"handover",    label:"Post Handover",    icon:"⇄", color:"#4d7c0f", bg:"#f7fee7", border:"#d9f99d"},
+  {id:"cctv_patrol", label:"CCTV Patrol",      icon:"📹", color:"#0891b2", bg:"#ecfeff", border:"#a5f3fc"},
+  {id:"health_safety", label:"Health & Safety", icon:"⛑", color:"#d97706", bg:"#fffbeb", border:"#fde68a"},
+  {id:"maintenance",   label:"Maintenance",     icon:"🔧", color:"#64748b", bg:"#f8fafc", border:"#e2e8f0"},
+];
+
+let logs = [];
+let selectedType = "on_duty";
+let photos = [];
+let locationData = null;
+
+/* ── CLOCK ── */
+function updateClock(){
+  const now = new Date();
+  document.getElementById('nav-clock').textContent =
+    now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('nav-date').textContent =
+    now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+  document.getElementById('sheet-time').textContent =
+    now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+setInterval(updateClock,1000); updateClock();
+
+/* ── QUICK ACTION ROW ── */
+function buildQuickRow(){
+  const row = document.getElementById('quick-row');
+  row.innerHTML = ET.map(et => `
+    <button class="quick-btn" onclick="quickLog('${et.id}')" style="border-top:3px solid ${et.color};">
+      <span class="quick-icon">${et.icon}</span>
+      <span class="quick-label" style="color:${et.color};">${et.label}</span>
+    </button>
+  `).join('');
+}
+
+/* ── TYPE GRID IN SHEET ── */
+function buildTypeGrid(){
+  const grid = document.getElementById('type-grid');
+  grid.innerHTML = ET.map(et => `
+    <div class="type-tile ${et.id===selectedType?'selected':''}"
+      style="${et.id===selectedType?`border-color:${et.color};background:${et.bg};`:'border-color:#e2e8f0;'}"
+      onclick="selectType('${et.id}')">
+      <span class="type-tile-icon">${et.icon}</span>
+      <span class="type-tile-label" style="${et.id===selectedType?`color:${et.color};`:''}">${et.label}</span>
+    </div>
+  `).join('');
+}
+
+function selectType(id){
+  selectedType = id;
+  buildTypeGrid();
+  document.getElementById('cat-row').style.display = id==='incident' ? 'block' : 'none';
+}
+
+/* ── SHEET OPEN/CLOSE ── */
+function openSheet(){
+  buildTypeGrid();
+  document.getElementById('sheet').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeSheet(){
+  document.getElementById('sheet').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow='';
+  document.getElementById('entry-notes').value='';
+  document.getElementById('inc-cat').value='';
+  selectedType='on_duty';
+  // Reset form/success visibility
+  setTimeout(()=>{
+    document.getElementById('sheet-form').style.display='';
+    document.getElementById('sheet-success').classList.remove('show');
+  }, 350);
+}
+
+/* ── QUICK LOG (one-tap, no notes) ── */
+function quickLog(typeId){
+  if(typeId === 'patrol_start'){
+    startPatrol();
+    return;
+  }
+  addEntry({type:typeId, notes:'', quick:true});
+}
+
+/* ── SUBMIT ── */
+function submitEntry(){
+  const notes = selectedType==='incident'
+    ? document.getElementById('inc-cat').value
+    : document.getElementById('entry-notes').value;
+  const et = ET.find(e=>e.id===selectedType);
+  // Show success state
+  document.getElementById('sheet-form').style.display='none';
+  const successEl = document.getElementById('sheet-success');
+  successEl.classList.add('show');
+  document.getElementById('success-title').textContent = et.icon + '  ' + et.label + ' Logged';
+  document.getElementById('success-sub').textContent = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) + '  ·  Harris, J.  ·  SIA-7741';
+  if(selectedType === 'patrol_start'){
+    closeSheet();
+    setTimeout(startPatrol, 400);
+    return;
+  }
+  addEntry({type:selectedType, notes});
+  // Auto close after brief pause
+  setTimeout(()=>{ closeSheet(); }, 1400);
+}
+
+function addEntry(opts){ const {type,notes,quick=false} = opts;
+  const et = ET.find(e=>e.id===type);
+  const entry = {
+    id: Date.now(),
+    time: new Date(),
+    type, notes,
+    officer:'Harris, J.',
+    badge:'SIA-7741',
+    isNew:true,
+    photos: quick ? [] : [...photos],
+    location: (opts.overrideLoc !== undefined) ? opts.overrideLoc : (quick ? null : (locationData ? {...locationData} : null)),
+  };
+  logs.unshift(entry);
+  photos = [];
+  locationData = null;
+  renderPhotoPreviews();
+  clearLocation();
+  renderLog();
+  updateStats();
+}
+
+/* ── RENDER LOG ── */
+function renderLog(){
+  const list = document.getElementById('log-list');
+  document.getElementById('log-count').textContent = logs.length + ' ' + (logs.length===1?'entry':'entries');
+
+  if(logs.length===0){
+    list.innerHTML=`<div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:32px;text-align:center;">
+      <div style="font-size:32px;margin-bottom:8px;">📋</div>
+      <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px;">No entries yet</div>
+      <div style="font-size:12px;color:var(--muted);">Tap the button above to log your first occurrence</div>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = logs.map((log,i) => {
+    const et = ET.find(e=>e.id===log.type);
+    const timeStr = log.time.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    const dateStr = log.time.toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
+    return `
+    <div class="log-card ${i===0&&log.isNew?'flash':''}" style="border-left-color:${et.color};">
+      <div class="log-card-top">
+        <div class="log-type-row">
+          <span class="log-type-icon">${et.icon}</span>
+          <span class="log-type-label" style="color:${et.color};">${et.label}</span>
+          ${i===0&&log.isNew?'<span class="badge-new">NEW</span>':''}
+        </div>
+        <span class="log-time">${timeStr}</span>
+      </div>
+      <div class="log-meta">
+        <span>👤 ${log.officer}</span>
+        <span class="log-sep">|</span>
+        <span>🪪 ${log.badge}</span>
+        <span class="log-sep">|</span>
+        <span>${dateStr}</span>
+      </div>
+      ${log.notes?`<div class="log-note">${log.notes}</div>`:''}
+      ${log.photos && log.photos.length ? `<div class="log-photos">${log.photos.map(p=>`<img class="log-photo-thumb" src="${p.url}" alt="evidence"/>`).join('')}</div>` : ''}
+      ${log.location ? `<div class="log-location">
+        <span class="log-location-icon">📍</span>
+        <div class="log-location-text">
+          ${log.location.w3w ? `<span class="log-location-w3w">/// ${log.location.w3w}</span>&nbsp;&nbsp;` : ''}
+          <span>${log.location.lat.toFixed(5)}, ${log.location.lng.toFixed(5)}</span>
+        </div>
+        <a href="https://www.google.com/maps?q=${log.location.lat},${log.location.lng}" target="_blank" style="font-size:11px;color:var(--blue);font-weight:500;flex-shrink:0;">Map ↗</a>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+/* ── UPDATE STATS ── */
+function updateStats(){
+  document.getElementById('stat-entries').textContent = logs.length;
+  document.getElementById('stat-incidents').textContent = logs.filter(l=>l.type==='incident').length;
+  document.getElementById('stat-patrols').textContent = logs.filter(l=>l.type==='patrol_end').length;
+}
+
+/* ── SEED A FEW DEMO LOGS ── */
+function seed(){
+  const types=[['on_duty',''],['patrol_start',''],['observation','Main entrance clear. No issues noted.'],['vehicle','VCIN check — no threat identified.'],['incident','Antisocial Behaviour']];
+  types.reverse().forEach(([t,n],i)=>{
+    const time = new Date(Date.now()-(i+1)*22*60000);
+    logs.push({id:i,time,type:t,notes:n,officer:'Harris, J.',badge:'SIA-7741',isNew:false});
+  });
+  renderLog();
+  updateStats();
+}
+
+
+/* ── PHOTOS ── */
+function handleFiles(files){
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      photos.push({url: e.target.result, name: file.name});
+      renderPhotoPreviews();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+document.getElementById('camera-input').addEventListener('change', e => handleFiles(e.target.files));
+document.getElementById('gallery-input').addEventListener('change', e => handleFiles(e.target.files));
+
+function renderPhotoPreviews(){
+  const cont = document.getElementById('photo-previews');
+  cont.innerHTML = photos.map((p,i) => `
+    <div class="photo-thumb">
+      <img src="${p.url}" alt="evidence"/>
+      <button class="photo-remove" onclick="removePhoto(${i})">✕</button>
+    </div>
+  `).join('');
+}
+function removePhoto(i){ photos.splice(i,1); renderPhotoPreviews(); }
+
+/* ── LOCATION ── */
+function getLocation(){
+  const btn = document.getElementById('loc-btn');
+  const arrow = document.getElementById('loc-btn-arrow');
+  arrow.innerHTML = '<span class="loc-spinner"></span>';
+  btn.style.borderColor = 'var(--navy)';
+
+  if(!navigator.geolocation){
+    alert('Geolocation is not supported by your browser.');
+    arrow.textContent = '›';
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+    locationData = { lat, lng, w3w: null };
+
+    document.getElementById('loc-coords').textContent = lat.toFixed(6) + ', ' + lng.toFixed(6);
+    document.getElementById('loc-maps-link').href = `https://www.google.com/maps?q=${lat},${lng}`;
+    document.getElementById('loc-result').classList.add('show');
+    arrow.textContent = '✓';
+    btn.style.color = 'var(--green)';
+    btn.style.borderColor = '#bbf7d0';
+
+    // What3Words lookup
+    fetchW3W(lat, lng);
+  }, err => {
+    arrow.textContent = '›';
+    btn.style.borderColor = 'var(--border2)';
+    let msg = 'Could not get location.';
+    if(err.code === 1) msg = 'Location access denied. Please allow location in your browser settings.';
+    alert(msg);
+  }, {enableHighAccuracy:true, timeout:10000});
+}
+
+function fetchW3W(lat, lng){
+  const w3wEl = document.getElementById('w3w-addr');
+  w3wEl.textContent = 'Looking up address...';
+  w3wEl.className = 'w3w-addr loading';
+  // Using What3Words free API
+  fetch(`https://api.what3words.com/v3/convert-to-3wa?coordinates=${lat},${lng}&key=DEMO_KEY&language=en`)
+    .then(r => r.json())
+    .then(data => {
+      if(data.words){
+        locationData.w3w = data.words;
+        w3wEl.textContent = '///' + data.words;
+        w3wEl.className = 'w3w-addr';
+      } else {
+        // Fallback — show grid reference style
+        const w3w = simulateW3W(lat, lng);
+        locationData.w3w = w3w;
+        w3wEl.textContent = '///' + w3w;
+        w3wEl.className = 'w3w-addr';
+      }
+    })
+    .catch(() => {
+      const w3w = simulateW3W(lat, lng);
+      locationData.w3w = w3w;
+      w3wEl.textContent = '///' + w3w;
+      w3wEl.className = 'w3w-addr';
+    });
+}
+
+// Demo fallback — generates a plausible-looking W3W for display
+function simulateW3W(lat, lng){
+  const words = ['brave','cloud','silver','table','filled','count','lucky','stone','mount','given','royal','flame','greet','sharp','north','coded','mixed','light','urban','fence','pilot','tower','grain','clock','route','delta','panel','swift'];
+  const h = Math.abs(Math.round(lat*10000 + lng*10000));
+  return words[h%words.length]+'.'+words[(h+7)%words.length]+'.'+words[(h+13)%words.length];
+}
+
+function clearLocation(){
+  locationData = null;
+  document.getElementById('loc-result').classList.remove('show');
+  document.getElementById('loc-btn').style.borderColor = 'var(--border2)';
+  document.getElementById('loc-btn').style.color = 'var(--text2)';
+  document.getElementById('loc-btn-arrow').textContent = '›';
+}
+
+
+/* ══════════════════════════════════════════
+   PATROL TRACKING
+══════════════════════════════════════════ */
+let patrolActive = false;
+let patrolMap = null;
+let patrolPolyline = null;
+let patrolMarkers = [];
+let patrolRoute = [];
+let patrolWatchId = null;
+let patrolStartTime = null;
+let patrolSteps = 0;
+let patrolDurationInterval = null;
+let stepSensor = null;
+let lastStepTime = 0;
+let lastAccel = {x:0,y:0,z:0};
+let patrolIncidentCount = 0;
+
+const CATS_INCIDENT = ['Theft / Shoplifting','Trespass','Antisocial Behaviour','Assault','Suspicious Person','Suspicious Vehicle','Drug-Related','Damage to Property','Medical Emergency','Fire / Safety'];
+
+function startPatrol(){
+  patrolActive = true;
+  patrolRoute = [];
+  patrolSteps = 0;
+  patrolIncidentCount = 0;
+  patrolStartTime = new Date();
+
+  // Show screen
+  document.getElementById('patrol-screen').classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  // Log the patrol start entry
+  addEntry({type:'patrol_start', notes:'Patrol commenced.', quick:true});
+
+  // Init map after screen is visible
+  setTimeout(initPatrolMap, 100);
+
+  // Start GPS tracking
+  if(navigator.geolocation){
+    patrolWatchId = navigator.geolocation.watchPosition(onPatrolPosition, onGpsError, {
+      enableHighAccuracy: true, maximumAge: 3000, timeout: 10000
+    });
+  }
+
+  // Step counter via accelerometer
+  if(window.DeviceMotionEvent){
+    stepSensor = function(e){
+      const acc = e.accelerationIncludingGravity;
+      if(!acc) return;
+      const mag = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
+      const delta = Math.abs(mag - Math.sqrt(lastAccel.x**2+lastAccel.y**2+lastAccel.z**2));
+      if(delta > 3.5){
+        const now = Date.now();
+        if(now - lastStepTime > 300){
+          patrolSteps++;
+          lastStepTime = now;
+          document.getElementById('pt-steps').textContent = patrolSteps;
+        }
+      }
+      lastAccel = {x:acc.x||0, y:acc.y||0, z:acc.z||0};
+    };
+    window.addEventListener('devicemotion', stepSensor);
+  }
+
+  // Duration timer
+  patrolDurationInterval = setInterval(updatePatrolDuration, 1000);
+}
+
+function initPatrolMap(){
+  if(patrolMap){ patrolMap.remove(); patrolMap = null; }
+  patrolMap = L.map('patrol-map', {zoomControl:true, attributionControl:false});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19}).addTo(patrolMap);
+
+  // Styled polyline for route
+  patrolPolyline = L.polyline([], {color:'#3b82f6', weight:4, opacity:.85, lineJoin:'round'}).addTo(patrolMap);
+
+  // Try to get initial position to centre map
+  navigator.geolocation.getCurrentPosition(pos => {
+    const ll = [pos.coords.latitude, pos.coords.longitude];
+    patrolMap.setView(ll, 17);
+  }, ()=>{
+    patrolMap.setView([52.48, -1.89], 15); // Fallback: Birmingham
+  });
+}
+
+function onPatrolPosition(pos){
+  const {latitude:lat, longitude:lng, accuracy} = pos.coords;
+  const ll = [lat, lng];
+
+  // Add to route
+  patrolRoute.push(ll);
+  patrolPolyline.addLatLng(ll);
+
+  // Move map to follow
+  if(patrolMap) patrolMap.panTo(ll, {animate:true, duration:.5});
+
+  // Update current position marker
+  if(patrolMarkers.length > 0 && patrolMarkers[patrolMarkers.length-1]._isCurrentPos){
+    patrolMap.removeLayer(patrolMarkers[patrolMarkers.length-1]);
+    patrolMarkers.pop();
+  }
+  const curIcon = L.divIcon({
+    className:'',
+    html:`<div style="width:16px;height:16px;background:#3b82f6;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,.3);"></div>`,
+    iconSize:[16,16], iconAnchor:[8,8]
+  });
+  const curMarker = L.marker(ll, {icon:curIcon}).addTo(patrolMap);
+  curMarker._isCurrentPos = true;
+  patrolMarkers.push(curMarker);
+
+  // Distance
+  const dist = calcRouteDistance();
+  document.getElementById('pt-distance').textContent = dist.toFixed(2);
+  document.getElementById('pt-points').textContent = patrolRoute.length;
+
+  // GPS accuracy
+  const accEl = document.getElementById('gps-accuracy');
+  accEl.textContent = '±' + Math.round(accuracy) + 'm';
+  accEl.style.color = accuracy < 15 ? '#4ade80' : accuracy < 40 ? '#fbbf24' : '#f87171';
+
+  // W3W lookup (throttle: every 10 points)
+  if(patrolRoute.length % 10 === 1){
+    fetchW3WPatrol(lat, lng);
+  }
+}
+
+function fetchW3WPatrol(lat, lng){
+  const badge = document.getElementById('map-w3w-badge');
+  fetch(`https://api.what3words.com/v3/convert-to-3wa?coordinates=${lat},${lng}&key=DEMO_KEY&language=en`)
+    .then(r=>r.json())
+    .then(d=>{
+      const w = d.words || simulateW3W(lat,lng);
+      badge.textContent = '/// ' + w;
+      badge.classList.add('show');
+    })
+    .catch(()=>{
+      badge.textContent = '/// ' + simulateW3W(lat,lng);
+      badge.classList.add('show');
+    });
+}
+
+function onGpsError(err){
+  document.getElementById('gps-accuracy').textContent = 'GPS unavailable';
+}
+
+function calcRouteDistance(){
+  if(patrolRoute.length < 2) return 0;
+  let d = 0;
+  for(let i=1;i<patrolRoute.length;i++){
+    d += haversine(patrolRoute[i-1], patrolRoute[i]);
+  }
+  return d;
+}
+
+function haversine([lat1,lng1],[lat2,lng2]){
+  const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function updatePatrolDuration(){
+  if(!patrolStartTime) return;
+  const secs = Math.floor((Date.now()-patrolStartTime)/1000);
+  const m = String(Math.floor(secs/60)).padStart(2,'0');
+  const s = String(secs%60).padStart(2,'0');
+  document.getElementById('pt-duration').textContent = m+':'+s;
+}
+
+function endPatrol(){
+  const dist = calcRouteDistance();
+  const secs = Math.floor((Date.now()-patrolStartTime)/1000);
+  const mins = Math.floor(secs/60);
+
+  // Stop everything
+  if(patrolWatchId) navigator.geolocation.clearWatch(patrolWatchId);
+  if(stepSensor) window.removeEventListener('devicemotion', stepSensor);
+  clearInterval(patrolDurationInterval);
+
+  // Log patrol end entry with summary
+  const summary = `Patrol completed. Duration: ${mins} min · Distance: ${dist.toFixed(2)}km · Steps: ${patrolSteps} · GPS points: ${patrolRoute.length}${patrolIncidentCount>0?' · Incidents logged: '+patrolIncidentCount:''}`;
+  addEntry({type:'patrol_end', notes:summary, quick:true});
+
+  // Close screen
+  document.getElementById('patrol-screen').classList.remove('active');
+  document.body.style.overflow = '';
+
+  // Reset
+  patrolActive = false;
+  patrolRoute = [];
+  patrolSteps = 0;
+  patrolStartTime = null;
+}
+
+/* Patrol quick-log actions */
+function logPatrolObservation(){
+  if(!patrolActive) return;
+  const loc = patrolRoute.length ? {lat:patrolRoute[patrolRoute.length-1][0], lng:patrolRoute[patrolRoute.length-1][1], w3w: null} : null;
+  addPatrolMarker('◎','#0369a1');
+  addEntry({type:'observation', notes:'Patrol observation logged.', quick:false, overrideLoc:loc});
+}
+function logPatrolVehicle(){
+  if(!patrolActive) return;
+  const loc = patrolRoute.length ? {lat:patrolRoute[patrolRoute.length-1][0], lng:patrolRoute[patrolRoute.length-1][1], w3w: null} : null;
+  addPatrolMarker('⊙','#be185d');
+  addEntry({type:'vehicle', notes:'VCIN vehicle check logged on patrol.', quick:false, overrideLoc:loc});
+}
+function logPatrolCheckpoint(){
+  if(!patrolActive) return;
+  const n = patrolMarkers.filter(m=>m._isCheckpoint).length + 1;
+  addPatrolMarker('📍','#16a34a', true, 'CP'+n);
+  addEntry({type:'observation', notes:`Checkpoint ${n} reached.`, quick:true});
+}
+
+function openPatrolIncident(){
+  const grid = document.getElementById('patrol-cat-grid');
+  grid.innerHTML = CATS_INCIDENT.map(c=>`<button class="patrol-cat-btn" onclick="logPatrolIncident('${c}')">${c}</button>`).join('');
+  document.getElementById('patrol-incident-modal').classList.add('open');
+}
+function closePatrolIncident(){
+  document.getElementById('patrol-incident-modal').classList.remove('open');
+}
+function logPatrolIncident(cat){
+  patrolIncidentCount++;
+  const loc = patrolRoute.length ? {lat:patrolRoute[patrolRoute.length-1][0], lng:patrolRoute[patrolRoute.length-1][1], w3w:null} : null;
+  addPatrolMarker('!','#dc2626');
+  addEntry({type:'incident', notes:cat, quick:false, overrideLoc:loc});
+  closePatrolIncident();
+}
+
+function addPatrolMarker(icon, color, isCheckpoint=false, label=''){
+  if(!patrolMap || !patrolRoute.length) return;
+  const ll = patrolRoute[patrolRoute.length-1];
+  const m = L.divIcon({
+    className:'',
+    html:`<div style="width:28px;height:28px;background:${color};border:2px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:700;">${label||icon}</div>`,
+    iconSize:[28,28], iconAnchor:[14,14]
+  });
+  const marker = L.marker(ll,{icon:m}).addTo(patrolMap);
+  if(isCheckpoint) marker._isCheckpoint = true;
+  patrolMarkers.push(marker);
+}
+
+
+/* ── INIT ── */
+buildQuickRow();
+seed();
+</script>
+
+<!-- ══ PATROL TRACKING SCREEN ══ -->
+<div id="patrol-screen">
+  <div class="patrol-header">
+    <div class="patrol-header-left">
+      <div class="patrol-pulse"></div>
+      <div>
+        <div class="patrol-header-title">Patrol Active</div>
+        <div class="patrol-header-sub" id="patrol-site-label">Brindleyplace · Harris, J.</div>
+      </div>
+    </div>
+    <button class="patrol-end-btn" onclick="endPatrol()">End Patrol</button>
+  </div>
+
+  <div class="patrol-stats">
+    <div class="patrol-stat">
+      <div class="patrol-stat-val" id="pt-duration">00:00</div>
+      <div class="patrol-stat-label">Duration</div>
+    </div>
+    <div class="patrol-stat">
+      <div class="patrol-stat-val" id="pt-distance">0.00</div>
+      <div class="patrol-stat-label">km</div>
+    </div>
+    <div class="patrol-stat">
+      <div class="patrol-stat-val" id="pt-steps">0</div>
+      <div class="patrol-stat-label">Steps</div>
+    </div>
+    <div class="patrol-stat">
+      <div class="patrol-stat-val" id="pt-points">0</div>
+      <div class="patrol-stat-label">GPS Points</div>
+    </div>
+  </div>
+
+  <div style="position:relative;flex:1;display:flex;flex-direction:column;min-height:0;height:100%;">
+    <div id="patrol-map"></div>
+    <div class="gps-accuracy" id="gps-accuracy">Acquiring GPS...</div>
+    <div class="map-w3w-badge" id="map-w3w-badge"></div>
+  </div>
+
+  <div class="patrol-actions">
+    <button class="patrol-action-btn red" onclick="openPatrolIncident()">
+      <span class="patrol-action-icon">⚠️</span>
+      <span>Incident</span>
+    </button>
+    <button class="patrol-action-btn blue" onclick="logPatrolObservation()">
+      <span class="patrol-action-icon">◎</span>
+      <span>Observation</span>
+    </button>
+    <button class="patrol-action-btn amber" onclick="logPatrolVehicle()">
+      <span class="patrol-action-icon">⊙</span>
+      <span>Vehicle</span>
+    </button>
+    <button class="patrol-action-btn green" onclick="logPatrolCheckpoint()">
+      <span class="patrol-action-icon">📍</span>
+      <span>Checkpoint</span>
+    </button>
+  </div>
+</div>
+
+<!-- Incident quick-log over patrol -->
+<div id="patrol-incident-modal">
+  <div class="patrol-modal-box">
+    <div class="patrol-modal-title">⚠️ Log Incident — select category</div>
+    <div class="patrol-cat-grid" id="patrol-cat-grid"></div>
+    <span class="patrol-modal-cancel" onclick="closePatrolIncident()">Cancel</span>
+  </div>
+</div>
+
+
+<script>
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('/sw.js').catch(()=>{}); }
+</script>
+</body>
+</html>

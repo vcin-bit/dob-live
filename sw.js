@@ -1,4 +1,4 @@
-const CACHE = 'doblive-v1';
+const CACHE = 'doblive-v3';
 const ASSETS = [
   '/login.html',
   '/officer-login.html',
@@ -6,6 +6,7 @@ const ASSETS = [
   '/ops-manager.html',
   '/client-portal.html',
   '/super-admin.html',
+  '/reset-password.html',
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png'
@@ -26,6 +27,14 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  const url = new URL(e.request.url);
+
+  // Never cache API calls or external requests — always go to network
+  if(url.hostname !== location.hostname) {
+    e.respondWith(fetch(e.request));
+    return;
+  }
+
   e.respondWith(
     caches.match(e.request).then(cached => {
       return cached || fetch(e.request).then(res => {
